@@ -185,3 +185,35 @@ and `vite build` clean.
 **Smoke test:** uvicorn + Vite (proxy) → real chat turn returned a cited Thermostat — 3.7L answer and the
 diagram asset streamed through `/api/manual-assets/{id}` (200, image/png). Screenshot verified the layout.
 Note: port 5173 was occupied by another local project, so the dev server was run on 5174 (`npx vite --port 5174`).
+
+## Phase 9 — Evaluation — DONE (2026-11-26)
+
+**Modules:** `backend/app/evaluation/{metrics,datasets,baselines,runner}.py`, `scripts/evaluate_rag.py`,
+`backend/tests/evaluation/data/{retrieval_cases_draft,retrieval_cases,conversation_cases}.json`.
+
+- 48 retrieval cases resolved against the manual. Each one's key fact is verified to occur in the expected procedure.
+- Full system: Recall@5 0.958, MRR 0.788, nDCG@5 0.823, 0 applicability violations, completeness 0.92,
+  figure P/R 0.73. Ablations: no_rerank 0.778 MRR, dense_only 0.759, bm25_only 0.663, no_filter 0.701 (+1.02 violations@5).
+- Reranker experiment (tuned on odd cases, checked on held-out even cases): the cross-encoder alone hurt, so it
+  was replaced by RRF(hybrid, rerank_mean, k=10). The task-type boost was rejected.
+- Chunking A/B/C: fixed-size MRR 0.671, recursive 0.625, structure-based 0.788. Baselines show ~1.3 wrong-variant
+  chunks in the top 5.
+- Context gate: 16 conversations / 29 turns. Decision accuracy 1.0, slot accuracy 1.0, 0 premature retrievals.
+- Faithfulness proxy (live Groq, n=8): 7/7 answers passed the validator, 1 Groq failure (served the excerpt fallback).
+- Bugs found by evaluation and fixed: mixed-qualifier applicability, metadata-blind index manifest, engine terms
+  in the query, raw reranker, validator false positives (Unicode hyphens, wrapped identifiers, vehicle facts).
+- `chunking --rebuild` now removes the throwaway `data/indexes/eval_chroma` dir. Opening a second Chroma
+  client with different settings raised "instance already exists".
+
+Report: `docs/evaluation_report.md`.
+
+## Phase 10 — Hardening & documentation — DONE (2026-11-26)
+
+- Docs: `architecture.md`, `safety_and_scope.md`, `operations.md`, `evaluation_report.md`, README rewrite.
+- Ruff clean. Removed dead code. SQLite `-wal/-shm` files untracked and ignored.
+- mypy: 146 → 49 errors. **Known issue:** the remaining errors are Optional narrowing and the untyped Chroma client
+  API. They aren't runtime defects (all tests pass), but they're left for a typing pass.
+- Disk: the machine ran out of space during evaluation (145 MB free). Only this project's eval index and pytest
+  temp files were deleted. The user freed the rest.
+
+**Tests:** backend 110 passing; frontend 13 passing; production build OK.

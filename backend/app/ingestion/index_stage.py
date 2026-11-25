@@ -8,6 +8,7 @@ embedding model forces a full rebuild of the collection.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -16,7 +17,7 @@ from app.embeddings.embedding_service import Embedder, SentenceTransformerEmbedd
 from app.embeddings.tokenizer import get_token_counter
 from app.retrieval.bm25_search import BM25Index, bm25_text, tokenize
 from app.schemas.chunk import Chunk
-from app.vectorstore.chroma_store import ChromaStore
+from app.vectorstore.chroma_store import ChromaStore, chunk_metadata
 
 if TYPE_CHECKING:
     from app.ingestion.ingestion_service import IngestionService
@@ -27,10 +28,16 @@ def load_chunks(path: Path) -> list[Chunk]:
         return [Chunk.model_validate_json(line) for line in fh]
 
 
+def index_hash(c: Chunk) -> str:
+    """What the vector store holds for a chunk: its text *and* its filterable metadata."""
+    payload = c.content_hash + json.dumps(chunk_metadata(c), sort_keys=True, default=str) + c.figure_ocr
+    return hashlib.sha256(payload.encode()).hexdigest()[:20]
+
+
 def plan_index_changes(chunks: list[Chunk], manifest: dict[str, str]) -> tuple[list[Chunk], list[str], list[str]]:
     """Return (to_upsert, stale_ids_to_delete, changed_ids) given the current manifest."""
-    current = {c.chunk_id: c.content_hash for c in chunks}
-    upsert = [c for c in chunks if manifest.get(c.chunk_id) != c.content_hash]
+    current = {c.chunk_id: index_hash(c) for c in chunks}
+    upsert = [c for c in chunks if manifest.get(c.chunk_id) != current[c.chunk_id]]
     changed = [c.chunk_id for c in upsert if c.chunk_id in manifest]
     stale = [cid for cid in manifest if cid not in current]
     return upsert, stale, changed
@@ -68,7 +75,7 @@ def run_index_stage(service: IngestionService, embedder: Embedder | None = None)
     new_manifest = {
         "embedding_model": embedder.model_name,
         "source_hash": chunks[0].source_hash if chunks else None,
-        "chunks": {c.chunk_id: c.content_hash for c in chunks},
+        "chunks": {c.chunk_id: index_hash(c) for c in chunks},
     }
     tmp = manifest_path.with_suffix(".tmp")
     tmp.write_text(json.dumps(new_manifest))

@@ -1,0 +1,92 @@
+{
+ "summary": {
+  "n": 8,
+  "llm_errors": 1,
+  "grounded_rate": 1.0,
+  "answers_with_unsupported_values": 0,
+  "mean_citations": 3.0,
+  "safety_reinsertions": 0
+ },
+ "cases": [
+  {
+   "id": "R01",
+   "error": null,
+   "seconds": 4.5,
+   "grounded": true,
+   "unsupported_values": [],
+   "citations": 4,
+   "safety_reinserted": false,
+   "warnings": []
+  },
+  {
+   "id": "R07",
+   "error": null,
+   "seconds": 1.6,
+   "grounded": true,
+   "unsupported_values": [],
+   "citations": 1,
+   "safety_reinserted": false,
+   "warnings": []
+  },
+  {
+   "id": "R13",
+   "error": null,
+   "seconds": 2.5,
+   "grounded": true,
+   "unsupported_values": [],
+   "citations": 2,
+   "safety_reinserted": false,
+   "warnings": []
+  },
+  {
+   "id": "R19",
+   "error": null,
+   "seconds": 3.1,
+   "grounded": true,
+   "unsupported_values": [],
+   "citations": 3,
+   "safety_reinserted": false,
+   "warnings": []
+  },
+  {
+   "id": "R25",
+   "error": null,
+   "seconds": 1.6,
+   "grounded": true,
+   "unsupported_values": [],
+   "citations": 1,
+   "safety_reinserted": false,
+   "warnings": []
+  },
+  {
+   "id": "R31",
+   "error": null,
+   "seconds": 3.0,
+   "grounded": true,
+   "unsupported_values": [],
+   "citations": 6,
+   "safety_reinserted": false,
+   "warnings": []
+  },
+  {
+   "id": "R37",
+   "error": null,
+   "seconds": 2.6,
+   "grounded": true,
+   "unsupported_values": [],
+   "citations": 4,
+   "safety_reinserted": false,
+   "warnings": []
+  },
+  {
+   "id": "R43",
+   "error": "LLMUnavailableError",
+   "seconds": 0.1,
+   "grounded": false,
+   "unsupported_values": [],
+   "citations": 0,
+   "safety_reinserted": false,
+   "warnings": []
+  }
+ ]
+}

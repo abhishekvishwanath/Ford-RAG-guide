@@ -60,8 +60,7 @@ def expand(
     if not primary:
         return []
     score_of = {c.chunk_id: (c.rerank_score if c.rerank_score is not None else c.rrf_score) for c in ranked}
-    hits = [repo.chunk(c.chunk_id) for c in primary]
-    hits = [h for h in hits if h is not None]
+    hits: list[Chunk] = [h for h in (repo.chunk(c.chunk_id) for c in primary) if h is not None]
     main_parent = req.focus_parent_id if req.focus_parent_id in {h.parent_id for h in hits} else hits[0].parent_id
     if req.focus_parent_id and req.focus_parent_id in repo.procedures and req.focus_steps:
         main_parent = req.focus_parent_id

@@ -86,7 +86,8 @@ def test_small_procedure_is_single_whole_chunk(docs):
     assert c.page_start == 1 and c.page_end == 2
     assert c.printed_page_start == "Page 1 of 2" and c.printed_page_end == "Page 2 of 2"
     assert c.applicability.model_years == [2099]
-    assert "9.9L" in c.applicability.engines  # from the qualifier line
+    assert c.applicability.engines == []  # mixed All-vehicles + 9.9L steps -> applies to all vehicles
+    assert "9.9L" in record.applicability.engines  # but the procedure distinguishes engines (readiness)
     assert {"has_warning", "has_torque", "has_table"} <= set(c.flags)
     # step order preserved
     assert c.content.index("1. Disconnect") < c.content.index("2. Remove") < c.content.index("3. Remove")
@@ -165,3 +166,21 @@ def test_token_fallback_for_oversize_step():
     )
     assert len(chunks) >= 3
     assert all(c.split_reason == "token_fallback" for c in chunks)
+
+
+def test_mixed_qualifier_chunk_stays_general_but_uniform_chunk_is_constrained(docs):
+    # synthetic procedure: steps 1-2 under "All vehicles", step 3 under "Vehicles with 9.9L engine"
+    chunks, _, _ = make_chunker().chunk_document(docs[0], {})
+    whole = chunks[0]
+    assert whole.applicability.engines == []  # mixed: applies to all vehicles
+    assert "Vehicles with 9.9L engine" in whole.applicability.raw_qualifiers
+    assert "variant_steps" in whole.applicability.sources
+    assert "[Vehicles with 9.9L engine]" in whole.content  # the variant steps stay labelled inline
+
+    from app.ingestion.chunker import Unit, chunk_applicability
+    from app.schemas.chunk import Applicability
+
+    step = Element(kind=ElementKind.STEP, step_number=1, text="x", pdf_page_index=0)
+    only = [Unit("qualifier", [], qualifier="Vehicles with 5.8L (4V) engine"),
+            Unit("step", [step], qualifier="Vehicles with 5.8L (4V) engine")]  # fmt: skip
+    assert chunk_applicability(Applicability(), only, None).engines == ["5.8L"]

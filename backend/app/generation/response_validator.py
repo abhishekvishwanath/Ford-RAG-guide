@@ -101,12 +101,15 @@ def strip_uncited_vehicle_claims(text: str) -> tuple[str, int]:
     return "\n".join(out_lines).strip(), removed
 
 
+WRAP_RE = re.compile(r"(?<=\d)-\s+(?=\d)")  # "1-800-959- 3673": identifier wrapped at a line end
+
+
 def evidence_text(pkg: EvidencePackage) -> str:
-    return "\n".join(i.content + "\n" + i.figure_ocr for i in pkg.items).translate(NORMALISE)
+    return WRAP_RE.sub("-", "\n".join(i.content + "\n" + i.figure_ocr for i in pkg.items).translate(NORMALISE))
 
 
 def validate(text: str, pkg: EvidencePackage) -> GeneratedAnswer:
-    text = text.translate(NORMALISE)
+    text = WRAP_RE.sub("-", text.translate(NORMALISE))
     valid_ids = {i.source_id for i in pkg.items}
     warnings: list[str] = []
     cited: list[str] = []
@@ -129,7 +132,9 @@ def validate(text: str, pkg: EvidencePackage) -> GeneratedAnswer:
     if removed:
         warnings.append(f"removed {removed} uncited claim(s) about the vehicle's equipment")
     ev = evidence_text(pkg)
-    allowed_values = _values(ev) | _table_values(ev) | _values(pkg.request.original_message)
+    req = pkg.request
+    vehicle_facts = " ".join(str(v) for v in (req.engine, req.model_year) if v)  # confirmed context, not specs
+    allowed_values = _values(ev) | _table_values(ev) | _values(req.original_message) | _values(vehicle_facts)
     unsupported = sorted(
         {
             m.group(0).strip()

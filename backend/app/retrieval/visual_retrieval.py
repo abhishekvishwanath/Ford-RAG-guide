@@ -27,7 +27,8 @@ def retrieve_images(items: list[EvidenceItem], repo: ManualRepository, limit: in
     candidates.sort(key=lambda t: (t[2].parent_id != main_parent, t[1].image_type != "illustration",
                                    METHOD_RANK.get(t[1].association_method, 9), t[0], t[1].pdf_page_index,
                                    t[1].bbox[1]))  # fmt: skip
-    picked = candidates[:limit]
+    main = [t for t in candidates if t[2].parent_id == main_parent]
+    picked = (main or candidates)[:limit]  # other procedures' diagrams only if the main one has none
     picked.sort(key=lambda t: (t[0], t[1].pdf_page_index, t[1].bbox[1]))  # present in manual order
     out: list[ImageRef] = []
     seen_assets: set[str] = set()

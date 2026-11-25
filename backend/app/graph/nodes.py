@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import re
 
 from app.conversation import context_extractor as cx
 from app.conversation.question_planner import describe_context, plan_question
@@ -371,6 +370,3 @@ def return_response(state: GraphState, deps: GraphDeps) -> GraphState:
         },
     }
     return {"response": response, "trace": _trace(state, "return_response")}
-
-
-STEP_REF_RE = re.compile(r"\bstep\s*(\d{1,3})\b", re.I)

@@ -62,8 +62,10 @@ def test_chroma_window_aggregation_and_filters(tmp_path):
 
 
 def test_plan_index_changes():
+    from app.ingestion.index_stage import index_hash
+
     a, b = make_chunk("a", "x"), make_chunk("b", "y")
-    upsert, stale, changed = plan_index_changes([a, b], {"a": a.content_hash, "b": "old", "z": "gone"})
+    upsert, stale, changed = plan_index_changes([a, b], {"a": index_hash(a), "b": "old", "z": "gone"})
     assert [c.chunk_id for c in upsert] == ["b"] and stale == ["z"] and changed == ["b"]
 
 
@@ -112,3 +114,17 @@ def test_embedding_model_change_forces_rebuild(service):
     run_index_stage(service, HashEmbedder(model_name="m1"))
     r = run_index_stage(service, HashEmbedder(model_name="m2"))
     assert r["full_rebuild"] is True and r["chunks_embedded"] == 1 and r["vector_count"] == 1
+
+
+def test_metadata_only_change_is_reindexed(service):
+    emb = HashEmbedder()
+    c = make_chunk("a", "water pump", engines=["5.8L"])
+    _write(service, [c])
+    run_index_stage(service, emb)
+    c2 = make_chunk("a", "water pump")  # same text, applicability fixed (no longer 5.8L-only)
+    _write(service, [c2])
+    r = run_index_stage(service, emb)
+    assert r["chunks_embedded"] == 1
+    store = ChromaStore(service.s.chroma_persist_directory, service.s.chroma_collection_name, emb)
+    meta = store.collection.get(where={"chunk_id": "a"}, include=["metadatas"])["metadatas"][0]
+    assert meta["engine_any"] is True and "eng_5_8l" not in meta

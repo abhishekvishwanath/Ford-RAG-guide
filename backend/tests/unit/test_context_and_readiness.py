@@ -192,3 +192,12 @@ def test_llm_echo_of_known_fact_does_not_downgrade_provenance():
     cx.apply_extraction(s, ex, 2, "5.0L V8")
     assert s.slot("model_year").status == SlotStatus.USER_PROVIDED
     assert evaluate(s, PROFILE, GATE).status == ReadinessStatus.READY
+
+
+def test_short_answer_is_not_reinterpreted_as_component():
+    s = new()
+    turn(s, "2014 mustang 5.0L, replace the clutch disc and pressure plate")
+    s.pending_question = PendingQuestion(slots=["transmission"], kind="information", text="?")
+    _, events, d = turn(s, "manual")
+    assert "task_changed" not in events and s.value("task_type") == "replace"
+    assert s.value("transmission") == "manual"

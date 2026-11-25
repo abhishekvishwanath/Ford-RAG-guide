@@ -18,7 +18,7 @@ from app.retrieval.applicability_filter import VehicleFilter
 from app.retrieval.bm25_search import BM25Index
 from app.retrieval.context_expansion import ExpansionConfig, detect_variant_ambiguity, expand
 from app.retrieval.fusion import rrf_fuse
-from app.retrieval.reranker import NoopReranker, Reranker
+from app.retrieval.reranker import NoopReranker, Reranker, probability
 from app.retrieval.visual_retrieval import retrieve_images, retrieve_tables
 from app.schemas.retrieval import Candidate, EvidencePackage, RetrievalRequest
 from app.services.manual_repository import ManualRepository
@@ -79,6 +79,7 @@ class RetrievalConfig:
     w_dense: float = 1.0
     w_bm25: float = 1.0
     rerank_candidates: int = 20
+    rerank_fusion_k: int = 10
     min_rerank_score: float = 0.2  # sigmoid(cross-encoder logit); calibrated in docs/evaluation_report.md
     min_dense_score: float = 0.45  # relevance floor when no cross-encoder is configured
     strictness: str = "strict"
@@ -95,6 +96,7 @@ class RetrievalConfig:
             w_dense=s.rrf_dense_weight,
             w_bm25=s.rrf_bm25_weight,
             rerank_candidates=s.rerank_candidates,
+            rerank_fusion_k=s.rerank_fusion_k,
             strictness=s.applicability_strictness,
             max_images=s.max_images_per_answer,
             expansion=ExpansionConfig(s.retrieval_top_k, s.max_expanded_chunks, s.evidence_token_budget),
@@ -213,34 +215,42 @@ class HybridRetrievalPipeline:
         return [q for q in dict.fromkeys([msg, structured]) if q]
 
     def rerank(self, request: RetrievalRequest, candidates: list[Candidate]) -> list[Candidate]:
+        """Rank-fuse the hybrid order with the cross-encoder order (RRF, k=rerank_fusion_k).
+
+        Evaluation (docs/evaluation_report.md) showed the generic MS MARCO cross-encoder alone ranks
+        worse than hybrid retrieval on this manual, while fusing both ranks is best; a task-type
+        tie-breaker did not help and was removed. Follow-up focus/step boosts are kept."""
         pool = candidates[: self.cfg.rerank_candidates]
-        passages = []
-        for c in pool:
-            ch = self.repo.chunk(c.chunk_id)
-            passages.append(f"{ch.context_header}\n{ch.content}"[:2000] if ch else "")
         active = self.reranker.name != "none"
-        if active:
+        rerank_pos: dict[int, int] = {}
+        best: list[float | None] = [None] * len(pool)
+        if active and pool:
+            passages = []
+            for c in pool:
+                ch = self.repo.chunk(c.chunk_id)
+                passages.append(f"{ch.context_header}\n{ch.content}"[:2000] if ch else "")
             per_query = [self.reranker.score(q, passages) for q in self.rerank_queries(request)]
-            scores = [max(vals) for vals in zip(*per_query, strict=True)] if per_query else [0.0] * len(pool)
-        else:
-            scores = [0.0] * len(pool)
-        max_rrf = max((c.rrf_score for c in pool), default=1.0) or 1.0
-        for c, s in zip(pool, scores, strict=True):
+            mean_logit = [sum(vals) / len(vals) for vals in zip(*per_query, strict=True)]
+            best = [max(vals) for vals in zip(*per_query, strict=True)]
+            rerank_pos = {i: r for r, i in enumerate(sorted(range(len(pool)), key=lambda i: -mean_logit[i]))}
+        k = self.cfg.rerank_fusion_k
+        for i, c in enumerate(pool):
             ch = self.repo.chunk(c.chunk_id)
-            boost = 0.0
+            score = 1.0 / (k + i + 1)
+            if active:
+                score += 1.0 / (k + rerank_pos[i] + 1)
             if ch is not None:
-                if ch.chunk_type in request.preferred_chunk_types:
-                    boost += 0.1 * (1 - request.preferred_chunk_types.index(ch.chunk_type) * 0.2)
                 if request.focus_parent_id and ch.parent_id == request.focus_parent_id:
-                    boost += 0.3
+                    score += 0.5
                 if (
                     request.focus_steps
                     and ch.step_range
                     and any(ch.step_range[0] <= st <= ch.step_range[1] for st in request.focus_steps)
                 ):
-                    boost += 0.2
-            c.rerank_raw = round(s, 4) if active else None
-            c.rerank_score = round((s if active else c.rrf_score / max_rrf) + boost, 4)
+                    score += 0.2
+            b = best[i]
+            c.rerank_raw = round(probability(b), 4) if b is not None else None
+            c.rerank_score = round(score, 5)
         return sorted(pool, key=lambda c: -(c.rerank_score or 0.0)) + candidates[self.cfg.rerank_candidates :]
 
     def expand(self, request: RetrievalRequest, candidates: list[Candidate]) -> EvidencePackage:
@@ -261,7 +271,8 @@ class HybridRetrievalPipeline:
         if not package.items:
             package.sufficient, package.insufficiency_reason = False, "no applicable manual content matched"
             return package
-        top = package.candidates[0] if package.candidates else None
+        # relevance gate on the most relevant of the top-k (fusion order need not put it first)
+        top = max(package.candidates[: self.cfg.top_k], key=lambda c: c.rerank_raw or 0.0, default=None)
         if (
             top is not None
             and top.rerank_raw is None

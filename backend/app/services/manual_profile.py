@@ -136,6 +136,7 @@ class ManualProfile:
             score = max(title_hit, 0.6 * section_hit, 0.95 * title_cov if title_cov == 1.0 else 0.6 * title_cov)
             if title_hit and len(q & core) == len(core):
                 score += 0.2  # every (non-variant) title word was mentioned
+            score += 0.01 * len(q & core)  # prefer the more specific title ("Door Trim Panel" over "Door")
             if score < 0.5:
                 continue
             if wanted and (p.get("doc_type") or "").upper() in wanted:

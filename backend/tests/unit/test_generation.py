@@ -101,3 +101,11 @@ def test_uncited_vehicle_equipment_claim_is_removed():
     a = rv.validate(text, p)
     assert "4-piston" not in a.text and "25 Nm (18 lb-ft). [S1]" in a.text
     assert any("uncited claim" in w for w in a.validation_warnings)
+
+
+def test_wrapped_identifiers_and_vehicle_facts_are_not_false_positives():
+    p = pkg()
+    p.request.engine = "5.0L"
+    p.items[0].content += "\nFor information call: 1-800-959- 3673."
+    a = rv.validate("For your 2014 Mustang 5.0 L: call 1-800-959-3673. Tighten to 25 Nm (18 lb-ft). [S1]", p)
+    assert a.grounded and not a.unsupported_values, a.unsupported_values

@@ -139,8 +139,14 @@ def evaluate(
         )
     for slot, attr in (("engine", profile.engines), ("transmission", profile.transmissions)):
         val = state.value(slot)
-        s = state.slot(slot)
-        if val and attr and val not in attr and s.status != SlotStatus.INFERRED and s.conflict_with in (None, []):
+        slot_state = state.slot(slot)
+        if (
+            val
+            and attr
+            and val not in attr
+            and slot_state.status != SlotStatus.INFERRED
+            and slot_state.conflict_with in (None, [])
+        ):
             return ReadinessDecision(
                 status=ReadinessStatus.OUT_OF_SCOPE,
                 reason=f"The manual covers {slot}s {', '.join(attr)}; '{val}' is not covered.",

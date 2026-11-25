@@ -149,6 +149,33 @@ def build_sections(doc: ProcedureDocument) -> list[Section]:
     return [s for s in sections if s.units]
 
 
+# ------------------------------------------------------------------ applicability
+ALL_VEHICLES_RE = re.compile(r"^\s*all vehicles\b", re.I)
+
+
+def chunk_applicability(proc_app: Applicability, units: list[Unit], carried: str | None) -> Applicability:
+    """Qualifier lines constrain a chunk only when *all* its content sits under one qualifier.
+
+    A chunk mixing "All vehicles" steps with a "Vehicles with 5.8L (4V) engine" block applies to every
+    vehicle (the variant-only steps stay inline, labelled by their qualifier line). Marking it 5.8L-only
+    would hide the whole procedure from a 5.0L technician."""
+    content = [u for u in units if u.kind != "qualifier"]
+    scopes = {u.qualifier or carried for u in content}
+    all_quals = list(dict.fromkeys(q for q in [*(u.qualifier for u in units), carried] if q))
+    if len(scopes) == 1 and None not in scopes:
+        q = next(iter(scopes))
+        if q and not ALL_VEHICLES_RE.match(q):
+            return md.merge(proc_app, md.from_qualifier(q))
+    app = md.merge(proc_app)
+    for q in all_quals:
+        qa = md.from_qualifier(q)
+        app.raw_qualifiers += [r for r in qa.raw_qualifiers if r not in app.raw_qualifiers]
+        app.equipment_conditions += [e for e in qa.equipment_conditions if e not in app.equipment_conditions]
+        if (qa.engines or qa.transmissions or qa.body_styles or qa.exclusions) and "variant_steps" not in app.sources:
+            app.sources.append("variant_steps")  # contains steps for specific variants, labelled inline
+    return app
+
+
 # ------------------------------------------------------------------ classification
 def classify_chunk(doc: ProcedureDocument, heading: str | None, text: str, units: list[Unit]) -> str:
     dt = (doc.doc_type or "").upper()
@@ -402,8 +429,7 @@ class HierarchicalChunker:
             header = self._context_header(doc, heading if reason != "whole_procedure" else None, continued)
             elements = [e for u in units for e in u.elements]
             pages = sorted({e.pdf_page_index for e in elements}) or [doc.pdf_page_start]
-            quals = list(dict.fromkeys([u.qualifier for u in units if u.qualifier] + ([qual] if qual else [])))
-            app = md.merge(proc_app, *(md.from_qualifier(q) for q in quals))
+            app = chunk_applicability(proc_app, units, qual)
             steps = [n for u in units for n in u.step_numbers]
             chunk_id = f"chk_{key}_{seq:03d}"
             fig_ids, ocr_snips = [], []
@@ -499,7 +525,12 @@ class HierarchicalChunker:
             printed_total=doc.printed_total,
             revision_date=doc.revision_date,
             chunk_ids=[c.chunk_id for c in chunks],
-            applicability=md.merge(proc_app, *(c.applicability for c in chunks)),
+            # procedure level = every variant the procedure distinguishes (drives the readiness gate)
+            applicability=md.merge(
+                proc_app,
+                *(c.applicability for c in chunks),
+                *(md.from_qualifier(q) for c in chunks for q in c.applicability.raw_qualifiers),
+            ),
             subsections=[s.heading for s in sections if s.heading],
         )
         return chunks, record, figure_records

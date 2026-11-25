@@ -1,0 +1,458 @@
+{
+ "summary": {
+  "conversations": 16,
+  "turns": 29,
+  "decision_accuracy": 1.0,
+  "slot_accuracy": 1.0,
+  "mean_clarification_turns": 0.625,
+  "unnecessary_question_rate": 0.0,
+  "premature_retrievals": 0,
+  "hard_gate_enforced": true
+ },
+ "conversations": [
+  {
+   "id": "C01",
+   "desc": "complete context in first message",
+   "turns": [
+    {
+     "user": "2014 Mustang 5.0L, I need to replace the water pump",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 0,
+   "unnecessary_questions": 0,
+   "questions": 0,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C02",
+   "desc": "missing model year",
+   "turns": [
+    {
+     "user": "replace the water pump on my 5.0L",
+     "expected": "NEEDS_INFORMATION",
+     "got": "NEEDS_INFORMATION",
+     "asked": [
+      "model_year"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "2014",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 1,
+   "unnecessary_questions": 0,
+   "questions": 1,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C03",
+   "desc": "missing engine (manual has 3.7L and 5.0L coolant pumps)",
+   "turns": [
+    {
+     "user": "2014 mustang, replace the water pump",
+     "expected": "NEEDS_INFORMATION",
+     "got": "NEEDS_INFORMATION",
+     "asked": [
+      "engine"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "3.7L",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 1,
+   "unnecessary_questions": 0,
+   "questions": 1,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C04",
+   "desc": "missing transmission where relevant (clutch is manual-only)",
+   "turns": [
+    {
+     "user": "2014 mustang 5.0L, replace the clutch disc and pressure plate",
+     "expected": "NEEDS_INFORMATION",
+     "got": "NEEDS_INFORMATION",
+     "asked": [
+      "transmission"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "manual",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 1,
+   "unnecessary_questions": 0,
+   "questions": 1,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C05",
+   "desc": "ambiguous component",
+   "turns": [
+    {
+     "user": "2014 mustang 3.7L, something is not right with it",
+     "expected": "NEEDS_INFORMATION",
+     "got": "NEEDS_INFORMATION",
+     "asked": [
+      "component"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "the rear shock absorber",
+     "expected": "NEEDS_INFORMATION",
+     "got": "NEEDS_INFORMATION",
+     "asked": [
+      "task_type"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "replace it",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 2,
+   "unnecessary_questions": 0,
+   "questions": 2,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C06",
+   "desc": "conflicting vehicle details",
+   "turns": [
+    {
+     "user": "2013 or 2014 mustang, remove the door trim panel",
+     "expected": "NEEDS_CONFIRMATION",
+     "got": "NEEDS_CONFIRMATION",
+     "asked": [
+      "model_year"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "2014",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 1,
+   "unnecessary_questions": 0,
+   "questions": 1,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C07",
+   "desc": "user corrects a previously supplied detail",
+   "turns": [
+    {
+     "user": "2014 mustang 3.7L, replace the thermostat",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    },
+    {
+     "user": "sorry, actually it's the 5.0L",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 0,
+   "unnecessary_questions": 0,
+   "questions": 0,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C08",
+   "desc": "user changes the task mid-session (vehicle retained)",
+   "turns": [
+    {
+     "user": "2014 mustang 5.0L, replace the water pump",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    },
+    {
+     "user": "now I need to remove the door trim panel",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 0,
+   "unnecessary_questions": 0,
+   "questions": 0,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C09",
+   "desc": "user does not know a required field",
+   "turns": [
+    {
+     "user": "2014 mustang, replace the starter",
+     "expected": "NEEDS_INFORMATION",
+     "got": "NEEDS_INFORMATION",
+     "asked": [
+      "engine"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "I don't know",
+     "expected": "NEEDS_INFORMATION",
+     "got": "NEEDS_INFORMATION",
+     "asked": [
+      "engine"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "5.0L",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 2,
+   "unnecessary_questions": 0,
+   "questions": 2,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C10",
+   "desc": "model year not covered by the manual",
+   "turns": [
+    {
+     "user": "2010 mustang, replace the water pump",
+     "expected": "OUT_OF_SCOPE",
+     "got": "OUT_OF_SCOPE",
+     "asked": [],
+     "ok": true,
+     "retrieved": false
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 0,
+   "unnecessary_questions": 0,
+   "questions": 0,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C11",
+   "desc": "different vehicle",
+   "turns": [
+    {
+     "user": "2014 F-150 water pump replacement",
+     "expected": "OUT_OF_SCOPE",
+     "got": "OUT_OF_SCOPE",
+     "asked": [],
+     "ok": true,
+     "retrieved": false
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 0,
+   "unnecessary_questions": 0,
+   "questions": 0,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C12",
+   "desc": "trim name implies engine -> confirm before searching",
+   "turns": [
+    {
+     "user": "2014 Mustang GT, replace the spark plugs",
+     "expected": "NEEDS_CONFIRMATION",
+     "got": "NEEDS_CONFIRMATION",
+     "asked": [
+      "engine"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "yes",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 1,
+   "unnecessary_questions": 0,
+   "questions": 1,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C13",
+   "desc": "immediate hazard -> safety first, then resume",
+   "turns": [
+    {
+     "user": "2014 mustang 5.0L, fuel is leaking from the fuel rail",
+     "expected": "SAFETY_ESCALATION",
+     "got": "SAFETY_ESCALATION",
+     "asked": [],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "ok it's safe now, leak contained. I need to replace the fuel rail",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 0,
+   "unnecessary_questions": 0,
+   "questions": 0,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C14",
+   "desc": "generic body job needs no engine/transmission questions",
+   "turns": [
+    {
+     "user": "2014 mustang, remove the door trim panel",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 0,
+   "unnecessary_questions": 0,
+   "questions": 0,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C15",
+   "desc": "diagnosis by DTC",
+   "turns": [
+    {
+     "user": "2014 mustang 5.0L automatic, getting DTC P0734",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 0,
+   "unnecessary_questions": 0,
+   "questions": 0,
+   "premature_retrievals": 0
+  },
+  {
+   "id": "C16",
+   "desc": "body-style variant needed",
+   "turns": [
+    {
+     "user": "2014 mustang, remove the quarter trim panel",
+     "expected": "NEEDS_INFORMATION",
+     "got": "NEEDS_INFORMATION",
+     "asked": [
+      "body_style"
+     ],
+     "ok": true,
+     "retrieved": false
+    },
+    {
+     "user": "convertible",
+     "expected": "READY",
+     "got": "READY",
+     "asked": [],
+     "ok": true,
+     "retrieved": true
+    }
+   ],
+   "decision_accuracy": 1.0,
+   "slot_accuracy": 1.0,
+   "clarification_turns": 1,
+   "unnecessary_questions": 0,
+   "questions": 1,
+   "premature_retrievals": 0
+  }
+ ]
+}

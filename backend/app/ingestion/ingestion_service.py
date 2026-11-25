@@ -28,7 +28,7 @@ from app.ingestion.boilerplate import MANUAL_LABEL_RE
 from app.ingestion.figure_ocr import run_figure_ocr
 from app.ingestion.pdf_parser import PageParseRunner, ParseOptions, file_sha256
 from app.ingestion.structure_detector import iter_procedures
-from app.schemas.document import DocumentMetadata, ElementKind, ProcedureDocument
+from app.schemas.document import DocumentMetadata, ProcedureDocument
 
 logger = logging.getLogger(__name__)
 
@@ -222,7 +222,3 @@ class IngestionService:
             log_event(logger, "ingestion stage done", stage=name, seconds=out["seconds"])
         self._write_status(state="done", finished_at=datetime.now(UTC).isoformat())
         return results
-
-
-def figure_count(doc: ProcedureDocument) -> int:
-    return sum(1 for e in doc.elements if e.kind == ElementKind.FIGURE)

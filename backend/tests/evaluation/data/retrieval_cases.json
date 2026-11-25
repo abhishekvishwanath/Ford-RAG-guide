@@ -1,0 +1,1205 @@
+{
+ "cases": [
+  {
+   "id": "R01",
+   "q": "How do I replace the front lower control arm?",
+   "task": "replace",
+   "component": "lower arm",
+   "veh": {
+    "engine": "5.0L",
+    "transmission": "automatic"
+   },
+   "section": "204-01",
+   "fact": "Lower arm forward bolt",
+   "expected_title": "Lower Arm",
+   "expected_parent_ids": [
+    "proc_SEB41004"
+   ],
+   "expected_source_ids": [
+    "SEB41004"
+   ],
+   "expected_pages": [
+    [
+     76,
+     84
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R02",
+   "q": "Front sway bar link removal",
+   "task": "removal",
+   "component": "stabilizer bar link",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "204-01",
+   "fact": "stabilizer bar link",
+   "expected_title": "Stabilizer Bar Link",
+   "expected_parent_ids": [
+    "proc_SEB41006"
+   ],
+   "expected_source_ids": [
+    "SEB41006"
+   ],
+   "expected_pages": [
+    [
+     88,
+     89
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R03",
+   "q": "Replace the front wheel bearing and hub",
+   "task": "replace",
+   "component": "wheel bearing",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "204-01",
+   "fact": "wheel hub",
+   "expected_title": "Wheel Bearing and Wheel Hub",
+   "expected_parent_ids": [
+    "proc_SEB41008"
+   ],
+   "expected_source_ids": [
+    "SEB41008"
+   ],
+   "expected_pages": [
+    [
+     94,
+     95
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R04",
+   "q": "Remove the front strut and spring",
+   "task": "removal",
+   "component": "struts",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "204-01",
+   "fact": "strut",
+   "expected_title": "Strut and Spring Assembly",
+   "expected_parent_ids": [
+    "proc_SEB41007"
+   ],
+   "expected_source_ids": [
+    "SEB41007"
+   ],
+   "expected_pages": [
+    [
+     90,
+     93
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R05",
+   "q": "Replace the rear shocks",
+   "task": "replace",
+   "component": "shocks",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "204-02",
+   "fact": "shock absorber",
+   "expected_title": "Shock Absorber",
+   "expected_parent_ids": [
+    "proc_SEB42007"
+   ],
+   "expected_source_ids": [
+    "SEB42007"
+   ],
+   "expected_pages": [
+    [
+     115,
+     117
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R06",
+   "q": "Replace a rear shock absorber on the GT500",
+   "task": "replace",
+   "component": "shock absorber",
+   "veh": {
+    "engine": "5.8L"
+   },
+   "section": "204-02",
+   "fact": "shock absorber",
+   "expected_title": "Shock Absorber \u2014 GT500",
+   "expected_parent_ids": [
+    "proc_SEB42008"
+   ],
+   "expected_source_ids": [
+    "SEB42008"
+   ],
+   "expected_pages": [
+    [
+     118,
+     121
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R07",
+   "q": "How do I remove the panhard rod?",
+   "task": "removal",
+   "component": "panhard rod",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "204-02",
+   "fact": "Panhard rod",
+   "expected_title": "Panhard Rod",
+   "expected_parent_ids": [
+    "proc_SEB42006"
+   ],
+   "expected_source_ids": [
+    "SEB42006"
+   ],
+   "expected_pages": [
+    [
+     112,
+     114
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R08",
+   "q": "Rear coil spring replacement",
+   "task": "replace",
+   "component": "coil spring",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "204-02",
+   "fact": "spring",
+   "expected_title": "Spring \u2014 Coil",
+   "expected_parent_ids": [
+    "proc_SEB42009"
+   ],
+   "expected_source_ids": [
+    "SEB42009"
+   ],
+   "expected_pages": [
+    [
+     122,
+     125
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R09",
+   "q": "Replace a rear axle shaft",
+   "task": "replace",
+   "component": "axle shaft",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "205-02",
+   "fact": "axle shaft",
+   "expected_title": "Axle Shaft",
+   "expected_parent_ids": [
+    "proc_SEB52006"
+   ],
+   "expected_source_ids": [
+    "SEB52006"
+   ],
+   "expected_pages": [
+    [
+     321,
+     327
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R10",
+   "q": "Differential cover gasket is leaking, how do I replace the cover?",
+   "task": "replace",
+   "component": "differential housing cover",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "205-02",
+   "fact": "cover",
+   "expected_title": "Differential Housing Cover",
+   "expected_parent_ids": [
+    "proc_SEB52008"
+   ],
+   "expected_source_ids": [
+    "SEB52008"
+   ],
+   "expected_pages": [
+    [
+     338,
+     341
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R11",
+   "q": "Replace a front 4 piston brake caliper",
+   "task": "replace",
+   "component": "caliper",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "206-03",
+   "fact": "caliper",
+   "expected_title": "Brake Caliper \u2014 4 Piston",
+   "expected_parent_ids": [
+    "proc_SEB63006"
+   ],
+   "expected_source_ids": [
+    "SEB63006"
+   ],
+   "expected_pages": [
+    [
+     435,
+     436
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R12",
+   "q": "Replace the front brake rotors",
+   "task": "replace",
+   "component": "rotors",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "206-03",
+   "fact": "brake disc",
+   "expected_title": "Brake Disc",
+   "expected_parent_ids": [
+    "proc_SEB63009"
+   ],
+   "expected_source_ids": [
+    "SEB63009"
+   ],
+   "expected_pages": [
+    [
+     444,
+     448
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R13",
+   "q": "Replace the rear brake pads",
+   "task": "replace",
+   "component": "brake pads",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "206-04",
+   "fact": "brake pads",
+   "expected_title": "Brake Pads",
+   "expected_parent_ids": [
+    "proc_SEB64011"
+   ],
+   "expected_source_ids": [
+    "SEB64011"
+   ],
+   "expected_pages": [
+    [
+     480,
+     483
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R14",
+   "q": "Adjust the parking brake cable",
+   "task": "adjust",
+   "component": "parking brake cable",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "206-05",
+   "fact": "parking brake",
+   "expected_title": "Parking Brake Cable Adjustment",
+   "expected_parent_ids": [
+    "proc_SEB65004"
+   ],
+   "expected_source_ids": [
+    "SEB65004"
+   ],
+   "expected_pages": [
+    [
+     495,
+     496
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R15",
+   "q": "Front ABS wheel speed sensor replacement",
+   "task": "replace",
+   "component": "wheel speed sensor",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "206-09",
+   "fact": "wheel speed sensor",
+   "expected_title": "Wheel Speed Sensor \u2014 Front",
+   "expected_parent_ids": [
+    "proc_SEB69007"
+   ],
+   "expected_source_ids": [
+    "SEB69007"
+   ],
+   "expected_pages": [
+    [
+     590,
+     591
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R16",
+   "q": "Replace the ABS module",
+   "task": "replace",
+   "component": "abs module",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "206-09",
+   "fact": "ABS module",
+   "expected_title": "Anti-Lock Brake System (ABS) Module",
+   "expected_parent_ids": [
+    "proc_SEB69004"
+   ],
+   "expected_source_ids": [
+    "SEB69004"
+   ],
+   "expected_pages": [
+    [
+     583,
+     584
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R17",
+   "q": "Inner tie rod replacement",
+   "task": "replace",
+   "component": "tie rod",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "211-02",
+   "fact": "tie rod",
+   "expected_title": "Tie Rod \u2014 Inner",
+   "expected_parent_ids": [
+    "proc_SEBB2005"
+   ],
+   "expected_source_ids": [
+    "SEBB2005"
+   ],
+   "expected_pages": [
+    [
+     617,
+     622
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R18",
+   "q": "Remove the steering wheel",
+   "task": "removal",
+   "component": "steering wheel",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "211-04",
+   "fact": "steering wheel",
+   "expected_title": "Steering Wheel",
+   "expected_parent_ids": [
+    "proc_SEBB4010"
+   ],
+   "expected_source_ids": [
+    "SEBB4010"
+   ],
+   "expected_pages": [
+    [
+     639,
+     641
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R19",
+   "q": "I need to replace the water pump",
+   "task": "replace",
+   "component": "water pump",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "303-03A",
+   "fact": "Coolant pump",
+   "expected_title": "Coolant Pump \u2014 5.0L",
+   "expected_parent_ids": [
+    "proc_SEB33A09"
+   ],
+   "expected_source_ids": [
+    "SEB33A09"
+   ],
+   "expected_pages": [
+    [
+     1659,
+     1661
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R20",
+   "q": "I need to replace the water pump",
+   "task": "replace",
+   "component": "water pump",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "303-03A",
+   "fact": "coolant pump",
+   "expected_title": "Coolant Pump \u2014 3.7L",
+   "expected_parent_ids": [
+    "proc_SEB33A08"
+   ],
+   "expected_source_ids": [
+    "SEB33A08"
+   ],
+   "expected_pages": [
+    [
+     1656,
+     1658
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R21",
+   "q": "Replace the thermostat",
+   "task": "replace",
+   "component": "thermostat",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "303-03A",
+   "fact": "thermostat",
+   "expected_title": "Thermostat \u2014 5.0L",
+   "expected_parent_ids": [
+    "proc_SEB33A17"
+   ],
+   "expected_source_ids": [
+    "SEB33A17"
+   ],
+   "expected_pages": [
+    [
+     1684,
+     1685
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R22",
+   "q": "Remove the radiator",
+   "task": "removal",
+   "component": "radiator",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "303-03A",
+   "fact": "radiator",
+   "expected_title": "Radiator",
+   "expected_parent_ids": [
+    "proc_SEB33A14"
+   ],
+   "expected_source_ids": [
+    "SEB33A14"
+   ],
+   "expected_pages": [
+    [
+     1672,
+     1676
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R23",
+   "q": "How do I bleed air out of the cooling system after refilling?",
+   "task": "service",
+   "component": "coolant",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "303-03A",
+   "fact": "Bleeding",
+   "expected_title": "Cooling System Draining, Filling and Bleeding",
+   "expected_parent_ids": [
+    "proc_SEB33A04"
+   ],
+   "expected_source_ids": [
+    "SEB33A04"
+   ],
+   "expected_pages": [
+    [
+     1644,
+     1648
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R24",
+   "q": "Replace the serpentine belt",
+   "task": "replace",
+   "component": "serpentine belt",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "303-05",
+   "fact": "belt",
+   "expected_title": "Accessory Drive Belt \u2014 5.0L (4V)",
+   "expected_parent_ids": [
+    "proc_SEB35005"
+   ],
+   "expected_source_ids": [
+    "SEB35005"
+   ],
+   "expected_pages": [
+    [
+     1776,
+     1776
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R25",
+   "q": "Replace the starter",
+   "task": "replace",
+   "component": "starter",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "303-06",
+   "fact": "starter motor",
+   "expected_title": "Starter Motor \u2014 3.7L",
+   "expected_parent_ids": [
+    "proc_SEB36005"
+   ],
+   "expected_source_ids": [
+    "SEB36005"
+   ],
+   "expected_pages": [
+    [
+     1818,
+     1820
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R26",
+   "q": "Replace the alternator",
+   "task": "replace",
+   "component": "alternator",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "414-00",
+   "fact": "generator",
+   "expected_title": "Generator \u2014 5.0L",
+   "expected_parent_ids": [
+    "proc_SEBE0010"
+   ],
+   "expected_source_ids": [
+    "SEBE0010"
+   ],
+   "expected_pages": [
+    [
+     3324,
+     3326
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R27",
+   "q": "Replace the spark plugs",
+   "task": "replace",
+   "component": "spark plug",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "303-07B",
+   "fact": "spark plug",
+   "expected_title": "Spark Plugs",
+   "expected_parent_ids": [
+    "proc_SEB37B06"
+   ],
+   "expected_source_ids": [
+    "SEB37B06"
+   ],
+   "expected_pages": [
+    [
+     1843,
+     1844
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R28",
+   "q": "Replace an ignition coil",
+   "task": "replace",
+   "component": "coil",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "303-07A",
+   "fact": "coil",
+   "expected_title": "Ignition Coil-On-Plug",
+   "expected_parent_ids": [
+    "proc_SEB37A05"
+   ],
+   "expected_source_ids": [
+    "SEB37A05"
+   ],
+   "expected_pages": [
+    [
+     1831,
+     1832
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R29",
+   "q": "Replace the fuel injectors",
+   "task": "replace",
+   "component": "fuel injectors",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "303-04B",
+   "fact": "injector",
+   "expected_title": "Fuel Injectors",
+   "expected_parent_ids": [
+    "proc_SEB34B04"
+   ],
+   "expected_source_ids": [
+    "SEB34B04"
+   ],
+   "expected_pages": [
+    [
+     1744,
+     1744
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R30",
+   "q": "Replace the throttle body",
+   "task": "replace",
+   "component": "throttle body",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "303-04B",
+   "fact": "throttle body",
+   "expected_title": "Throttle Body",
+   "expected_parent_ids": [
+    "proc_SEB34B08"
+   ],
+   "expected_source_ids": [
+    "SEB34B08"
+   ],
+   "expected_pages": [
+    [
+     1757,
+     1759
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R31",
+   "q": "Replace the in-tank fuel pump",
+   "task": "replace",
+   "component": "fuel pump",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "310-01",
+   "fact": "fuel pump",
+   "expected_title": "Fuel Pump Module",
+   "expected_parent_ids": [
+    "proc_SEBA1009"
+   ],
+   "expected_source_ids": [
+    "SEBA1009"
+   ],
+   "expected_pages": [
+    [
+     2789,
+     2793
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R32",
+   "q": "Replace an upstream O2 sensor",
+   "task": "replace",
+   "component": "o2 sensor",
+   "veh": {
+    "engine": "5.0L",
+    "transmission": "automatic"
+   },
+   "section": "303-14",
+   "fact": "HO2S",
+   "expected_title": "Heated Oxygen Sensor (HO2S)",
+   "expected_parent_ids": [
+    "proc_SEB3E008"
+   ],
+   "expected_source_ids": [
+    "SEB3E008"
+   ],
+   "expected_pages": [
+    [
+     1943,
+     1946
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R33",
+   "q": "Replace the MAF sensor",
+   "task": "replace",
+   "component": "maf",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "303-14",
+   "fact": "MAF",
+   "expected_title": "Mass Air Flow (MAF) Sensor",
+   "expected_parent_ids": [
+    "proc_SEB3E009"
+   ],
+   "expected_source_ids": [
+    "SEB3E009"
+   ],
+   "expected_pages": [
+    [
+     1947,
+     1948
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R34",
+   "q": "Replace the clutch",
+   "task": "replace",
+   "component": "clutch",
+   "veh": {
+    "engine": "5.0L",
+    "transmission": "manual"
+   },
+   "section": "308-01",
+   "fact": "pressure plate",
+   "expected_title": "Clutch Disc and Pressure Plate \u2014 5.0L",
+   "expected_parent_ids": [
+    "proc_SEB81009"
+   ],
+   "expected_source_ids": [
+    "SEB81009"
+   ],
+   "expected_pages": [
+    [
+     2564,
+     2566
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R35",
+   "q": "How do I bleed the hydraulic clutch?",
+   "task": "service",
+   "component": "clutch system bleeding",
+   "veh": {
+    "engine": "5.0L",
+    "transmission": "manual"
+   },
+   "section": "308-02",
+   "fact": "bleed",
+   "expected_title": "Clutch System Bleeding",
+   "expected_parent_ids": [
+    "proc_SEB82004"
+   ],
+   "expected_source_ids": [
+    "SEB82004"
+   ],
+   "expected_pages": [
+    [
+     2586,
+     2587
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R36",
+   "q": "Change the MT82 transmission fluid",
+   "task": "service",
+   "component": "trans fluid",
+   "veh": {
+    "engine": "5.0L",
+    "transmission": "manual"
+   },
+   "section": "308-03A",
+   "fact": "fill",
+   "expected_title": "Transmission Draining and Filling",
+   "expected_parent_ids": [
+    "proc_SEB83A04"
+   ],
+   "expected_source_ids": [
+    "SEB83A04"
+   ],
+   "expected_pages": [
+    [
+     2608,
+     2610
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R37",
+   "q": "Replace the catalytic converter",
+   "task": "replace",
+   "component": "catalytic converter",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "309-00",
+   "fact": "catalytic converter",
+   "expected_title": "Catalytic Converter \u2014 5.0L",
+   "expected_parent_ids": [
+    "proc_SEB90006"
+   ],
+   "expected_source_ids": [
+    "SEB90006"
+   ],
+   "expected_pages": [
+    [
+     2720,
+     2722
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R38",
+   "q": "Replace the muffler",
+   "task": "replace",
+   "component": "muffler",
+   "veh": {
+    "engine": "3.7L"
+   },
+   "section": "309-00",
+   "fact": "muffler",
+   "expected_title": "Muffler",
+   "expected_parent_ids": [
+    "proc_SEB90011"
+   ],
+   "expected_source_ids": [
+    "SEB90011"
+   ],
+   "expected_pages": [
+    [
+     2733,
+     2734
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R39",
+   "q": "Replace the A/C compressor",
+   "task": "replace",
+   "component": "a/c compressor",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "412-01",
+   "fact": "compressor",
+   "expected_title": "Air Conditioning (A/C) Compressor \u2014 5.0L and 5.8L",
+   "expected_parent_ids": [
+    "proc_SEBC1008"
+   ],
+   "expected_source_ids": [
+    "SEBC1008"
+   ],
+   "expected_pages": [
+    [
+     2967,
+     2969
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R40",
+   "q": "Replace the blower motor",
+   "task": "replace",
+   "component": "blower motor",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "412-01",
+   "fact": "blower motor",
+   "expected_title": "Blower Motor",
+   "expected_parent_ids": [
+    "proc_SEBC1012"
+   ],
+   "expected_source_ids": [
+    "SEBC1012"
+   ],
+   "expected_pages": [
+    [
+     2978,
+     2979
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R41",
+   "q": "Remove the door panel",
+   "task": "removal",
+   "component": "door trim panel",
+   "veh": {},
+   "section": "501-05",
+   "fact": "trim panel",
+   "expected_title": "Door Trim Panel",
+   "expected_parent_ids": [
+    "proc_SEB15004"
+   ],
+   "expected_source_ids": [
+    "SEB15004"
+   ],
+   "expected_pages": [
+    [
+     4048,
+     4049
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R42",
+   "q": "Replace the door latch",
+   "task": "replace",
+   "component": "door latch",
+   "veh": {},
+   "section": "501-14",
+   "fact": "latch",
+   "expected_title": "Door Latch",
+   "expected_parent_ids": [
+    "proc_SEB1E009"
+   ],
+   "expected_source_ids": [
+    "SEB1E009"
+   ],
+   "expected_pages": [
+    [
+     4408,
+     4409
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R43",
+   "q": "Remove the rear quarter trim panel",
+   "task": "removal",
+   "component": "quarter trim panel",
+   "veh": {
+    "body_style": "convertible"
+   },
+   "section": "501-05",
+   "fact": "quarter trim panel",
+   "expected_title": "Quarter Trim Panel \u2014 Convertible",
+   "expected_parent_ids": [
+    "proc_SEB15008"
+   ],
+   "expected_source_ids": [
+    "SEB15008"
+   ],
+   "expected_pages": [
+    [
+     4056,
+     4058
+    ]
+   ],
+   "expected_has_figures": true
+  },
+  {
+   "id": "R44",
+   "q": "Program a spare key with the scan tool",
+   "task": "service",
+   "component": "spare key programming",
+   "veh": {},
+   "section": "419-01B",
+   "fact": "key",
+   "expected_title": "Spare Key Programming \u2014 Using Diagnostic Equipment",
+   "expected_parent_ids": [
+    "proc_SEBJ1B11"
+   ],
+   "expected_source_ids": [
+    "SEBJ1B11"
+   ],
+   "expected_pages": [
+    [
+     3917,
+     3918
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R45",
+   "q": "What is the torque for the front wheel hub nut?",
+   "task": "specification",
+   "component": "wheel hub nut",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "204-01",
+   "fact": "Wheel hub nut | 340",
+   "expected_title": "SPECIFICATIONS",
+   "expected_parent_ids": [
+    "proc_SEB41001"
+   ],
+   "expected_source_ids": [
+    "SEB41001"
+   ],
+   "expected_pages": [
+    [
+     69,
+     70
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R46",
+   "q": "What does DTC P0734 mean on the 6R80?",
+   "task": "diagnose",
+   "component": null,
+   "dtcs": [
+    "P0734"
+   ],
+   "veh": {
+    "engine": "5.0L",
+    "transmission": "automatic"
+   },
+   "section": "307-01",
+   "fact": "P0734",
+   "expected_title": "Diagnostic Trouble Code (DTC) Charts",
+   "expected_parent_ids": [
+    "proc_SEB71016"
+   ],
+   "expected_source_ids": [
+    "SEB71016"
+   ],
+   "expected_pages": [
+    [
+     2130,
+     2149
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R47",
+   "q": "Torque spec for the front brake caliper bolts",
+   "task": "specification",
+   "component": "caliper",
+   "veh": {
+    "engine": "5.0L"
+   },
+   "section": "206-03",
+   "fact": "Brake caliper bolt",
+   "expected_title": "SPECIFICATIONS",
+   "expected_parent_ids": [
+    "proc_SEB63001"
+   ],
+   "expected_source_ids": [
+    "SEB63001"
+   ],
+   "expected_pages": [
+    [
+     430,
+     430
+    ]
+   ],
+   "expected_has_figures": false
+  },
+  {
+   "id": "R48",
+   "q": "How do I disconnect the battery?",
+   "task": "service",
+   "component": "battery",
+   "veh": {},
+   "section": "414-01",
+   "fact": "battery",
+   "expected_title": "Battery Disconnect",
+   "expected_parent_ids": [
+    "proc_SEBE1007"
+   ],
+   "expected_source_ids": [
+    "SEBE1007"
+   ],
+   "expected_pages": [
+    [
+     3332,
+     3333
+    ]
+   ],
+   "expected_has_figures": false
+  }
+ ]
+}

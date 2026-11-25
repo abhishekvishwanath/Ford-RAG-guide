@@ -12,6 +12,7 @@ import re
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import pymupdf
 
@@ -214,7 +215,7 @@ def _classify_one(para: Paragraph, pdf_page_index: int, is_first_page: bool, see
     text = para.text
     first = para.lines[0]
     bbox = para.bbox
-    base = {"pdf_page_index": pdf_page_index, "bbox": bbox, "bold": para.all_bold}
+    base: dict[str, Any] = {"pdf_page_index": pdf_page_index, "bbox": bbox, "bold": para.all_bold}
 
     if first.italic and first.size <= 9.5 and not first.bold:
         if m := bp.SECTION_HEADER_RE.match(text):

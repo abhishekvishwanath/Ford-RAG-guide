@@ -20,7 +20,6 @@ from typing import Any
 
 from app.conversation.state import (
     REPAIR_SLOTS,
-    ActiveProcedure,
     SessionState,
     Slot,
     SlotStatus,
@@ -252,6 +251,24 @@ def _model_inferences(text: str) -> list[tuple[str, str, str]]:
     return out
 
 
+ANSWER_WORDS_RE = re.compile(
+    r"\b(\d{4}|'\d{2}|\d\.\d\s*l?|liter|litre|v6|v8|automatic|auto|manual|stick|coupe|convertible|yes|yeah|yep|"
+    r"no|nope|correct|right|it|its|it's|is|the|a|an|one|engine|transmission|trans|gearbox|i|think|has|have|got|"
+    r"mustang|ford|my|car|sure|ok|okay|actually|sorry|please)\b",
+    re.I,
+)
+
+
+def _residual_words(text: str) -> list[str]:
+    """Words left after removing slot-answer vocabulary."""
+    return [w for w in re.findall(r"[a-z]+", ANSWER_WORDS_RE.sub(" ", text.lower())) if len(w) > 1]
+
+
+def clean_component(text: str) -> str:
+    t = re.sub(r"^\s*(the|a|an|my|its|it's)\s+", "", text.strip().strip(".!?").lower())
+    return re.sub(r"\s+", " ", t)
+
+
 def detect_task(text: str) -> str | None:
     hits = [name for name, rx in TASK_RULES if rx.search(text)]
     if "removal" in hits and "installation" in hits:
@@ -336,7 +353,22 @@ def rule_extract(text: str, state: SessionState, profile: ManualProfile) -> Extr
     task = detect_task(text)
     if task:
         ex.updates["task_type"] = SlotUpdate(task, confidence=0.85)
-    component, terms = detect_component(text, profile, task or state.value("task_type"))
+    # A short answer to a pending question ("manual", "the 5.0", "2014") is just that answer; it must not
+    # be re-read as a new component (e.g. "manual" -> "Manual Transmission").
+    residual = _residual_words(text)
+    answering_component = bool(pending and pending_slots == ["component"] and 0 < len(text.split()) <= 8)
+    if (
+        pending
+        and pending.kind in ("information", "confirmation")
+        and "component" not in pending_slots
+        and len(residual) < 2
+    ):
+        component, terms = None, []
+    elif answering_component and not ex.unsure:
+        component = clean_component(text)  # keep the technician's own phrase ("rear shock absorber")
+        terms = manual_terms_for(component)
+    else:
+        component, terms = detect_component(text, profile, task or state.value("task_type"))
     if component:
         ex.updates["component"] = SlotUpdate(component, confidence=0.9)
         ex.manual_terms = terms
@@ -347,9 +379,6 @@ def rule_extract(text: str, state: SessionState, profile: ManualProfile) -> Extr
     # short answers to a pending single-slot question ("auto", "the 5.0")
     if pending and pending.kind == "information" and len(pending_slots) == 1 and pending_slots[0] not in ex.updates:
         slot = pending_slots[0]
-        if slot == "component" and not ex.unsure and 0 < len(text.split()) <= 8:
-            ex.updates["component"] = SlotUpdate(text.strip().strip(".").lower(), confidence=0.85)
-            ex.manual_terms = manual_terms_for(text)
         if slot in ("symptom_or_dtc", "conditions", "symptoms") and not ex.unsure and text.strip():
             ex.updates["symptoms" if slot != "conditions" else "conditions"] = SlotUpdate(
                 text.strip()[:300], confidence=0.85
@@ -544,7 +573,3 @@ def apply_extraction(state: SessionState, ex: Extraction, turn: int, text: str) 
                             basis=up.basis, source_text=text[:200]))  # fmt: skip
         events.append(f"set:{name}")
     return events
-
-
-def resolve_followup(state: SessionState) -> ActiveProcedure | None:
-    return state.active_procedure

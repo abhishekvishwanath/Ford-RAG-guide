@@ -16,7 +16,7 @@ class Reranker(Protocol):
     def score(self, query: str, passages: list[str]) -> list[float]: ...
 
 
-class NoopReranker:
+class NoopReranker:  # noqa: D101
     name = "none"
 
     def score(self, query: str, passages: list[str]) -> list[float]:
@@ -42,4 +42,8 @@ class CrossEncoderReranker:
         if not passages:
             return []
         raw = self._load().predict([(query, p) for p in passages], show_progress_bar=False)
-        return [1.0 / (1.0 + math.exp(-float(s))) for s in raw]  # logits -> (0, 1)
+        return [float(s) for s in raw]  # raw logits; see probability()
+
+
+def probability(logit: float) -> float:
+    return 1.0 / (1.0 + math.exp(-logit))

@@ -1,0 +1,64 @@
+{"_comment": "Context-gathering scenarios (spec section 21A). 'expect' = readiness status after each turn; 'necessary_slots' = slots a question may legitimately ask for; evaluated against the real manual profile.",
+ "conversations": [
+  {"id": "C01", "desc": "complete context in first message", "turns": [
+    {"user": "2014 Mustang 5.0L, I need to replace the water pump", "expect": "READY"}],
+   "final_slots": {"model_year": 2014, "engine": "5.0L", "component": "water pump", "task_type": "replace"}, "necessary_slots": []},
+  {"id": "C02", "desc": "missing model year", "turns": [
+    {"user": "replace the water pump on my 5.0L", "expect": "NEEDS_INFORMATION"},
+    {"user": "2014", "expect": "READY"}],
+   "final_slots": {"model_year": 2014, "engine": "5.0L"}, "necessary_slots": ["model_year"]},
+  {"id": "C03", "desc": "missing engine (manual has 3.7L and 5.0L coolant pumps)", "turns": [
+    {"user": "2014 mustang, replace the water pump", "expect": "NEEDS_INFORMATION"},
+    {"user": "3.7L", "expect": "READY"}],
+   "final_slots": {"engine": "3.7L", "component": "water pump"}, "necessary_slots": ["engine", "transmission"]},
+  {"id": "C04", "desc": "missing transmission where relevant (clutch is manual-only)", "turns": [
+    {"user": "2014 mustang 5.0L, replace the clutch disc and pressure plate", "expect": "NEEDS_INFORMATION"},
+    {"user": "manual", "expect": "READY"}],
+   "final_slots": {"transmission": "manual", "engine": "5.0L"}, "necessary_slots": ["transmission"]},
+  {"id": "C05", "desc": "ambiguous component", "turns": [
+    {"user": "2014 mustang 3.7L, something is not right with it", "expect": "NEEDS_INFORMATION"},
+    {"user": "the rear shock absorber", "expect": "NEEDS_INFORMATION"},
+    {"user": "replace it", "expect": "READY"}],
+   "final_slots": {"component": "rear shock absorber", "task_type": "replace"}, "necessary_slots": ["component", "task_type", "symptom_or_dtc"]},
+  {"id": "C06", "desc": "conflicting vehicle details", "turns": [
+    {"user": "2013 or 2014 mustang, remove the door trim panel", "expect": "NEEDS_CONFIRMATION"},
+    {"user": "2014", "expect": "READY"}],
+   "final_slots": {"model_year": 2014}, "necessary_slots": ["model_year"]},
+  {"id": "C07", "desc": "user corrects a previously supplied detail", "turns": [
+    {"user": "2014 mustang 3.7L, replace the thermostat", "expect": "READY"},
+    {"user": "sorry, actually it's the 5.0L", "expect": "READY"}],
+   "final_slots": {"engine": "5.0L", "component": "thermostat"}, "necessary_slots": []},
+  {"id": "C08", "desc": "user changes the task mid-session (vehicle retained)", "turns": [
+    {"user": "2014 mustang 5.0L, replace the water pump", "expect": "READY"},
+    {"user": "now I need to remove the door trim panel", "expect": "READY"}],
+   "final_slots": {"model_year": 2014, "engine": "5.0L", "component": "door trim panel"}, "necessary_slots": []},
+  {"id": "C09", "desc": "user does not know a required field", "turns": [
+    {"user": "2014 mustang, replace the starter", "expect": "NEEDS_INFORMATION"},
+    {"user": "I don't know", "expect": "NEEDS_INFORMATION"},
+    {"user": "5.0L", "expect": "READY"}],
+   "final_slots": {"engine": "5.0L", "component": "starter"}, "necessary_slots": ["engine", "transmission"]},
+  {"id": "C10", "desc": "model year not covered by the manual", "turns": [
+    {"user": "2010 mustang, replace the water pump", "expect": "OUT_OF_SCOPE"}],
+   "final_slots": {}, "necessary_slots": []},
+  {"id": "C11", "desc": "different vehicle", "turns": [
+    {"user": "2014 F-150 water pump replacement", "expect": "OUT_OF_SCOPE"}],
+   "final_slots": {}, "necessary_slots": []},
+  {"id": "C12", "desc": "trim name implies engine -> confirm before searching", "turns": [
+    {"user": "2014 Mustang GT, replace the spark plugs", "expect": "NEEDS_CONFIRMATION"},
+    {"user": "yes", "expect": "READY"}],
+   "final_slots": {"engine": "5.0L"}, "necessary_slots": ["engine"]},
+  {"id": "C13", "desc": "immediate hazard -> safety first, then resume", "turns": [
+    {"user": "2014 mustang 5.0L, fuel is leaking from the fuel rail", "expect": "SAFETY_ESCALATION"},
+    {"user": "ok it's safe now, leak contained. I need to replace the fuel rail", "expect": "READY"}],
+   "final_slots": {"engine": "5.0L"}, "necessary_slots": []},
+  {"id": "C14", "desc": "generic body job needs no engine/transmission questions", "turns": [
+    {"user": "2014 mustang, remove the door trim panel", "expect": "READY"}],
+   "final_slots": {"component": "door trim panel", "task_type": "removal"}, "necessary_slots": []},
+  {"id": "C15", "desc": "diagnosis by DTC", "turns": [
+    {"user": "2014 mustang 5.0L automatic, getting DTC P0734", "expect": "READY"}],
+   "final_slots": {"dtcs": "['P0734']", "task_type": "diagnose"}, "necessary_slots": []},
+  {"id": "C16", "desc": "body-style variant needed", "turns": [
+    {"user": "2014 mustang, remove the quarter trim panel", "expect": "NEEDS_INFORMATION"},
+    {"user": "convertible", "expect": "READY"}],
+   "final_slots": {"body_style": "convertible"}, "necessary_slots": ["body_style"]}
+ ]}

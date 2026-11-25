@@ -83,6 +83,7 @@ class Settings(BaseSettings):
     reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     reranker_enabled: bool = True
     rerank_candidates: int = 20
+    rerank_fusion_k: int = 10
     max_expanded_chunks: int = 8
     max_images_per_answer: int = 6
     evidence_token_budget: int = 4500  # sized for the 8k TPM tier; raise with a higher provider tier

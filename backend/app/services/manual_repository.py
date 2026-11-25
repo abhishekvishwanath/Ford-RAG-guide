@@ -5,7 +5,6 @@ Loaded once into memory (a few tens of MB for the full manual); keyed for O(1) l
 
 from __future__ import annotations
 
-import json
 from collections import defaultdict
 from pathlib import Path
 
@@ -67,7 +66,3 @@ class ManualRepository:
     def stats(self) -> dict:
         return {"chunks": len(self.chunks), "procedures": len(self.procedures), "figures": len(self.figures),
                 "tables": len(self.tables)}  # fmt: skip
-
-
-def dump_json(obj: object) -> str:
-    return json.dumps(obj, default=str)
