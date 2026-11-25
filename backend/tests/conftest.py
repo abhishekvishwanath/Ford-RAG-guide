@@ -8,14 +8,14 @@ from pathlib import Path
 import pymupdf
 import pytest
 
-LABEL = "2099 Testcar Workshop Manual"
+LABEL = "2041 Testcar Workshop Manual"
 
 
 def _footer(page: pymupdf.Page, n: int, total: int, seb: str) -> None:
     y = 750
     page.insert_text((50, y), f"Page {n} of {total}", fontname="tiro", fontsize=12)
     page.insert_text((50, y + 12), LABEL, fontname="tiro", fontsize=12)
-    page.insert_text((50, y + 24), "2099-01-02", fontname="tiro", fontsize=12)
+    page.insert_text((50, y + 24), "2041-01-02", fontname="tiro", fontsize=12)
     page.insert_text(
         (250, y), f"file://C:\\X\\cache\\SEB~us~en~file={seb}.HTM~gen~ref.HTM", fontname="tiro", fontsize=8
     )

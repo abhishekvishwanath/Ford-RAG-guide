@@ -27,7 +27,7 @@ def test_footer_and_page_numbering(parsed):
     p0 = parsed[0]
     assert p0.seb_id == "SEB99001"
     assert (p0.printed_page, p0.printed_total) == (1, 2)
-    assert p0.manual_label == "2099 Testcar Workshop Manual"
+    assert p0.manual_label == "2041 Testcar Workshop Manual"
     assert parsed[2].seb_id == "SEB99002"
 
 

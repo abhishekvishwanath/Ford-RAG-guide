@@ -38,8 +38,10 @@ class Settings(BaseSettings):
     llm_extraction_model: str = "openai/gpt-oss-20b"
     llm_timeout_seconds: float = 60.0
     llm_max_retries: int = 2
-    llm_max_output_tokens: int = 4096
+    llm_max_output_tokens: int = 1800
+    llm_tpm_limit: int = 8000  # provider tokens-per-minute cap per request (Groq on_demand tier = 8000)
     llm_temperature: float = 0.1
+    llm_reasoning_effort: str = "low"  # gpt-oss: low | medium | high
 
     # --- Source manual -----------------------------------------------------
     manual_pdf_path: Path = PROJECT_ROOT / "data/raw/319-Ford-Mustang-Workshop-Service-Manual-_-2004-2014.pdf"
@@ -83,7 +85,7 @@ class Settings(BaseSettings):
     rerank_candidates: int = 20
     max_expanded_chunks: int = 8
     max_images_per_answer: int = 6
-    evidence_token_budget: int = 9000
+    evidence_token_budget: int = 4500  # sized for the 8k TPM tier; raise with a higher provider tier
     applicability_strictness: str = "strict"  # strict | lenient
 
     # --- Conversation / readiness ----------------------------------------

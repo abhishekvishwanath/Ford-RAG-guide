@@ -82,3 +82,82 @@ Discovered coverage: engines 3.7L, 5.0L, 5.8L; transmissions automatic/manual; c
 
 **Known issues:** some un-ruled two-column "Item / Specification" material tables still fall back to
 heading + paragraphs (text preserved, structure partial). Parser 1.2.0 addresses most; see Phase 4 run.
+
+## Phase 4 — Embeddings and persistent indexing — DONE (2026-11-25)
+
+**Modules:** `embeddings/{embedding_service,tokenizer}.py`, `vectorstore/chroma_store.py`, `retrieval/bm25_search.py`, `ingestion/index_stage.py`.
+
+- `all-MiniLM-L6-v2` truncates at 256 word-pieces, so each chunk is embedded as overlapping ~190-token windows
+  prefixed with a short context label; dense hits are aggregated per chunk by max similarity (documented deviation).
+- Persistent ChromaDB (`get_or_create_collection`, cosine). A manifest (chunk_id → content hash) makes indexing
+  incremental: only new/changed chunks are embedded, stale chunks are deleted, an embedding-model change rebuilds.
+- Chroma metadata is scalar: per-variant boolean flags (`eng_5_0l`, `trans_automatic`, …) plus `*_any` flags.
+- BM25 corpus persisted as JSONL (no pickles); tokenizer keeps part/tool numbers, DTCs, displacements, units intact.
+
+**Full-manual results (parser 1.2.0):** 5,007 pages / 0 failed / 0 OCR pages; 942 procedures; 4,039 chunks
+(median 315 tokens, p95 665, max 924 — 1 chunk over 900); 9,847 vectors written in 59 s; tables 1,887.
+Re-running chunk+index embeds 0 chunks (idempotent; verified in integration test).
+
+## Phase 5 — Conversation context and readiness gate — DONE (2026-11-25)
+
+**Modules:** `conversation/{state,context_extractor,readiness,question_planner,safety,session_manager}.py`,
+`memory/{memory_models,session_store}.py`, `services/manual_profile.py`, `config/readiness_policy.json`, `graph/*`.
+
+- Slots carry value, provenance (user_provided / confirmed / inferred / user_unsure), confidence, turn, basis,
+  conflict. A restatement never downgrades provenance; trim names (GT, GT500, V6) only produce *inferred* engines.
+- Rule extraction for explicit facts + optional Groq `gpt-oss-20b` JSON extraction for free text; LLM vehicle
+  values not literally supported by the user's words are stored as inferred (must be confirmed).
+- Readiness gate: safety → scope (manual years/engines from the profile) → conflicts → hard slots → inferred /
+  low-confidence confirmation → weighted score ≥ 0.85. Engine/transmission/body become hard **dynamically**
+  when the manual's catalogue procedures for the component differ by that variant (e.g. Coolant Pump — 3.7L /
+  — 5.0L → engine required; Door Trim Panel → not).
+- Unknown answers get manual-grounded hints (VIN 8th digit engine code, Section 100-01).
+- LangGraph: 27 nodes per spec + insufficient-evidence exit; the readiness conditional edge is the only path to
+  retrieval, and each retrieval node also refuses to run without READY (defense in depth).
+- SQLite session store behind a repository protocol: persistence, isolation, 20-message cap, sliding expiry, purge.
+
+**Tests:** extraction, readiness (spec example, hard-gate vs score, dynamic variants, inference confirmation,
+scope, conflicts, corrections, task change, unsure, safety, follow-up), session store (restart, isolation,
+truncation, expiry), graph (retrieval mocked to fail on every non-READY path).
+
+## Phase 6 — Hybrid retrieval and visual retrieval — DONE (2026-11-25)
+
+**Modules:** `retrieval/{pipeline,applicability_filter,fusion,reranker,context_expansion,visual_retrieval}.py`,
+`services/manual_repository.py`, `config/synonyms.json`.
+
+- Query construction keeps user wording, adds manual synonyms (water pump → coolant pump), DTCs and identifiers;
+  vehicle variants are filters, not query terms (adding "5.0L" biased ranking toward engine tables — fixed).
+- Applicability: Chroma `where` + BM25 mask exclude incompatible variants; non-specific chunks kept and labelled.
+- Weighted RRF (k=60) with content-hash dedup → cross-encoder `ms-marco-MiniLM-L-6-v2` scored with two queries
+  (synonym-rewritten message + "<manual term> <task>"), because manual terminology raised the correct chunk's
+  logit from −2.9 to +8.4 → small task-type / follow-up / step boosts.
+- Expansion: whole procedure for procedural tasks if it fits the budget, else preamble + hits + neighbours +
+  referenced steps; other procedures unexpanded; manual order preserved.
+- Visuals only from ingestion-time associations; main procedure first; only images tied to cited evidence are shown.
+- Variant ambiguity (two compatible procedures differing only by an unspecified variant) → clarification.
+
+## Phase 7 — LangGraph and generation — DONE (2026-11-25)
+
+**Modules:** `generation/{llm_client,prompts,answer_generator,response_validator}.py`, `api/*`, `services/container.py`, `main.py`.
+
+- Groq `openai/gpt-oss-120b` (reasoning effort configurable, default low). **The supplied key is on Groq's
+  on_demand tier: 8,000 tokens/minute per model** (prompt + max output). Defaults were sized for it
+  (evidence 4,500 tokens, output 1,800) and the prompt is trimmed (other procedures first) to fit.
+- Validator: normalises Unicode hyphens/spaces; accepts `[ S2 ]`/bare `S2` markers for real ids; removes unknown
+  ids; every value+unit and part/tool/DTC identifier must occur in evidence (including spec-table columns whose
+  units are in the header); uncited technical content → rejected; dropped WARNING/CAUTION re-inserted verbatim;
+  uncited claims about the vehicle's equipment are stripped. Rejected/unavailable → verbatim excerpt fallback.
+- Citations are built from chunk metadata (section, procedure id, subsection, PDF pages, printed "Page X of N").
+- API: `/api/chat`, `/api/sessions[/{id}][/context]`, `/api/admin/{ingest,reindex,ingestion/status}` (X-Admin-Key),
+  `/api/manual-assets/{asset_id}` (id-validated, no paths), `/api/health`; rate limiting; per-session locks.
+
+**Live checks against the real manual (Groq):**
+- Spec example: "replace the water pump" → year? → engine? (manual has 3.7L/5.0L coolant pumps) → "5.0L V8" →
+  READY → Coolant Pump — 5.0L removal + installation, 3.7L excluded, cited PDF pp. 1659–1661.
+- "What torque do the pump bolts need?" → follow-up on the active procedure → Stage 1 20 Nm (177 lb-in),
+  Stage 2 +60° [Installation, p. 1660–1661].
+- "what is step 6 of the removal?" → "Remove the thermostat housing…" [p. 1660].
+- Front caliper bolt torque → 115 Nm (85 lb-ft) for both listed caliper variants [Front Disc Brake specs, p. 430].
+
+**Tests:** 104 passing (unit + integration: synthetic manual ingested end-to-end through Chroma, FastAPI flow,
+diagram served, follow-up re-retrieval, honest insufficient-evidence, restart persistence, admin auth, path safety).

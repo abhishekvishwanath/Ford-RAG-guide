@@ -1,0 +1,131 @@
+{
+  "_comment": "Readiness policy. Hard slots block retrieval regardless of score. Variant slots (engine/transmission/body_style) become hard dynamically when the manual's candidate procedures for the component differ by that variant.",
+  "always_hard": [
+    "model_year",
+    "component"
+  ],
+  "task_policies": {
+    "replace": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "removal": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "installation": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "repair": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "disassembly": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "inspect": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "adjust": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "service": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "specification": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "overview": {
+      "hard": [
+        "task_type"
+      ],
+      "soft": []
+    },
+    "diagnose": {
+      "hard": [
+        "task_type",
+        "symptom_or_dtc"
+      ],
+      "soft": [
+        "conditions"
+      ]
+    }
+  },
+  "fallback_variant_requirements": {
+    "_comment": "Used when the component matches no catalogue procedure: these systems are commonly variant-specific in this manual.",
+    "engine": [
+      "engine",
+      "cooling",
+      "fuel",
+      "exhaust",
+      "ignition",
+      "emission",
+      "intake",
+      "accessory drive",
+      "supercharger",
+      "starting",
+      "charging",
+      "driveshaft"
+    ],
+    "transmission": [
+      "transmission",
+      "clutch",
+      "transaxle",
+      "gear shift",
+      "shifter",
+      "torque converter",
+      "driveshaft"
+    ]
+  },
+  "weights": {
+    "model_year": 0.25,
+    "component": 0.25,
+    "task_type": 0.15,
+    "engine": 0.15,
+    "transmission": 0.1,
+    "body_style": 0.05,
+    "symptom_or_dtc": 0.15,
+    "conditions": 0.05
+  },
+  "slot_priority": [
+    "model_year",
+    "component",
+    "task_type",
+    "engine",
+    "transmission",
+    "body_style",
+    "symptom_or_dtc",
+    "conditions"
+  ],
+  "max_soft_questions": 1,
+  "unsure_hints": {
+    "_comment": "Shown when the user does not know a required field. Only manual-supported guidance (Section 100-01 Identification Codes, PDF pages 1-2).",
+    "engine": "If you're not sure, the 8th character of the VIN is the engine code (manual Section 100-01, Identification Codes): F = 5.0L, M = 3.7L, Z = 5.8L.",
+    "model_year": "If you're not sure, the 10th character of the VIN is the model-year code (manual Section 100-01, Identification Codes).",
+    "transmission": "If you're not sure, the Vehicle Certification (VC) label and the transmission identification are covered in manual Section 100-01; a clutch pedal also indicates the manual transmission."
+  }
+}

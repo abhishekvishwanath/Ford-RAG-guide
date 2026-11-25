@@ -66,15 +66,15 @@ class ProcedureRecord(BaseModel):
     parent_id: str
     procedure_id: str
     source_procedure_id: str
-    title: str | None
-    section_code: str | None
-    section_name: str | None
-    doc_type: str | None
+    title: str | None = None
+    section_code: str | None = None
+    section_name: str | None = None
+    doc_type: str | None = None
     toc_path: list[str]
     page_start: int
     page_end: int
-    printed_total: int | None
-    revision_date: str | None
+    printed_total: int | None = None
+    revision_date: str | None = None
     chunk_ids: list[str]
     applicability: Applicability
     subsections: list[str] = Field(default_factory=list)
@@ -93,8 +93,8 @@ class FigureRecord(BaseModel):
     extraction_method: str
     procedure_id: str
     source_procedure_id: str
-    procedure_title: str | None
-    section_code: str | None
+    procedure_title: str | None = None
+    section_code: str | None = None
     related_chunk_ids: list[str] = Field(default_factory=list)
     nearest_step: int | None = None
     subsection: str | None = None
