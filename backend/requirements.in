@@ -1,0 +1,19 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-multipart
+pymupdf
+pytesseract
+pillow
+sentence-transformers
+chromadb
+rank-bm25
+langgraph
+groq
+sqlalchemy
+# dev
+pytest
+httpx
+ruff
+mypy

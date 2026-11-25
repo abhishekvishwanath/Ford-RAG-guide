@@ -1,0 +1,32 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# node
+node_modules/
+frontend/dist/
+frontend/coverage/
+
+# data: manual PDF (copyrighted, 206 MB, contains third-party watermark), generated artifacts
+data/raw/*
+data/processed/*
+data/extracted_images/*
+data/indexes/*
+data/chroma_db/*
+data/*.db
+!data/**/.gitkeep
+# evaluation outputs are small and reproducible — keep them
+!data/indexes/.gitkeep
+
+.DS_Store
+*.log

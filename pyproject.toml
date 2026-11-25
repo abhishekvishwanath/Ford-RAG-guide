@@ -1,0 +1,26 @@
+[project]
+name = "mustang-workshop-assistant"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]
+markers = [
+  "real_manual: tests that need the real ingested manual (skipped if absent)",
+  "slow: slow tests",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["backend"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true
