@@ -18,6 +18,8 @@ def health(c: Container = Depends(get_container)) -> dict:
         "index_ready": c.index_ready,
         "manual": c.manual.stats(),
         "model_years": c.profile.model_years,
+        "engines": c.profile.engines,
+        "transmissions": c.profile.transmissions,
         "llm_configured": c.llm is not None,
         "llm_model": s.llm_model,
     }

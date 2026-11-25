@@ -161,3 +161,27 @@ truncation, expiry), graph (retrieval mocked to fail on every non-READY path).
 
 **Tests:** 104 passing (unit + integration: synthetic manual ingested end-to-end through Chroma, FastAPI flow,
 diagram served, follow-up re-retrieval, honest insufficient-evidence, restart persistence, admin auth, path safety).
+
+## Phase 8 — Frontend — DONE (2026-11-25)
+
+**Modules:** `frontend/src/{App.tsx, hooks/useChat.ts, services/api.ts, types/api.ts}`,
+`components/{MessageBubble,Markdown,markdownParse,DiagramGallery,SourcesList,SpecTables,VehiclePanel,Composer}`.
+
+- Vehicle and task panel shows each slot with provenance badge (confirmed / provided / needs confirmation /
+  unknown), marks required-but-missing fields, and has an editor (options from the manual profile via
+  `/api/health`) that calls `/api/sessions/{id}/context` → readiness re-evaluated, active procedure invalidated.
+- Readiness indicator (status + score bar + still-needed fields); "Checking details…" vs "Searching the manual…".
+- Distinct message modes: clarifying question (with option chips), confirmation, safety escalation,
+  out of scope, answer. No sources/diagrams are shown while context is being collected.
+- Safe Markdown renderer (React elements only): manual step numbers preserved, WARNING/CAUTION as red alerts,
+  NOTICE/NOTE as amber notes, pipe tables, `[S#]` citation chips that highlight the source entry.
+- Original diagrams with captions, step, PDF + printed page and OCR-read figure id; lightbox with zoom.
+- Sources list with section, procedure, PDF pages, printed "Page X of N", procedure reference; collapsible tables;
+  copy answer; error bubble with retry; session id in localStorage (guarded) with restore on reload.
+
+**Tests:** Vitest + Testing Library — 13 passing (renderer, XSS safety, modes, diagram lightbox, full
+clarification→answer flow with session id reuse, error+retry, vehicle edit → context API). `tsc -b`, oxlint
+and `vite build` clean.
+**Smoke test:** uvicorn + Vite (proxy) → real chat turn returned a cited Thermostat — 3.7L answer and the
+diagram asset streamed through `/api/manual-assets/{id}` (200, image/png). Screenshot verified the layout.
+Note: port 5173 was occupied by another local project, so the dev server was run on 5174 (`npx vite --port 5174`).
