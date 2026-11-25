@@ -1,0 +1,219 @@
+{
+ "_comment": "User wording -> manual terminology. Used to match the procedure catalogue (readiness) and to expand keyword queries. Never changes confirmed vehicle facts.",
+ "components": {
+  "water pump": [
+   "coolant pump"
+  ],
+  "alternator": [
+   "generator"
+  ],
+  "starter": [
+   "starter motor"
+  ],
+  "o2 sensor": [
+   "heated oxygen sensor",
+   "ho2s"
+  ],
+  "oxygen sensor": [
+   "heated oxygen sensor",
+   "ho2s"
+  ],
+  "shocks": [
+   "shock absorber"
+  ],
+  "shock": [
+   "shock absorber"
+  ],
+  "struts": [
+   "strut and spring assembly",
+   "strut"
+  ],
+  "control arm": [
+   "lower arm",
+   "upper arm"
+  ],
+  "tie rod": [
+   "tie-rod end"
+  ],
+  "ball joint": [
+   "lower arm",
+   "ball joint"
+  ],
+  "brake pads": [
+   "brake pads",
+   "front disc brake",
+   "rear disc brake"
+  ],
+  "pads": [
+   "brake pads"
+  ],
+  "rotors": [
+   "brake disc"
+  ],
+  "rotor": [
+   "brake disc"
+  ],
+  "front brakes": [
+   "front disc brake",
+   "brake pads"
+  ],
+  "rear brakes": [
+   "rear disc brake",
+   "brake pads"
+  ],
+  "caliper": [
+   "brake caliper"
+  ],
+  "e-brake": [
+   "parking brake"
+  ],
+  "handbrake": [
+   "parking brake"
+  ],
+  "emergency brake": [
+   "parking brake"
+  ],
+  "headlight": [
+   "headlamp"
+  ],
+  "headlights": [
+   "headlamp"
+  ],
+  "tail light": [
+   "rear lamp",
+   "tail lamp"
+  ],
+  "taillight": [
+   "rear lamp",
+   "tail lamp"
+  ],
+  "fuel pump": [
+   "fuel pump and sender unit",
+   "fuel pump"
+  ],
+  "gas tank": [
+   "fuel tank"
+  ],
+  "radiator fan": [
+   "cooling fan motor and shroud"
+  ],
+  "cooling fan": [
+   "cooling fan motor and shroud"
+  ],
+  "coolant": [
+   "cooling system draining, filling and bleeding"
+  ],
+  "antifreeze": [
+   "coolant"
+  ],
+  "serpentine belt": [
+   "accessory drive belt"
+  ],
+  "drive belt": [
+   "accessory drive belt"
+  ],
+  "belt": [
+   "accessory drive belt"
+  ],
+  "spark plug": [
+   "spark plugs"
+  ],
+  "coil pack": [
+   "ignition coil"
+  ],
+  "coil": [
+   "ignition coil"
+  ],
+  "valve cover": [
+   "valve cover"
+  ],
+  "intake manifold": [
+   "intake manifold"
+  ],
+  "throttle body": [
+   "throttle body"
+  ],
+  "maf": [
+   "mass air flow (maf) sensor"
+  ],
+  "trans fluid": [
+   "transmission fluid"
+  ],
+  "atf": [
+   "transmission fluid"
+  ],
+  "diff": [
+   "differential"
+  ],
+  "rear end": [
+   "rear drive axle",
+   "differential"
+  ],
+  "u-joint": [
+   "universal joint"
+  ],
+  "driveshaft": [
+   "driveshaft"
+  ],
+  "drive shaft": [
+   "driveshaft"
+  ],
+  "a/c": [
+   "climate control",
+   "a/c compressor"
+  ],
+  "ac": [
+   "climate control",
+   "a/c compressor"
+  ],
+  "heater": [
+   "heater core"
+  ],
+  "radio": [
+   "audio",
+   "information and entertainment"
+  ],
+  "window regulator": [
+   "window regulator"
+  ],
+  "door handle": [
+   "exterior door handle"
+  ],
+  "wheel bearing": [
+   "wheel bearing and wheel hub"
+  ],
+  "hub": [
+   "wheel bearing and wheel hub"
+  ],
+  "thermostat": [
+   "thermostat"
+  ],
+  "battery": [
+   "battery"
+  ],
+  "oil pan": [
+   "oil pan"
+  ],
+  "oil change": [
+   "engine oil draining and filling"
+  ],
+  "timing chain": [
+   "timing chain",
+   "timing drive components"
+  ],
+  "exhaust": [
+   "exhaust system",
+   "muffler"
+  ],
+  "muffler": [
+   "muffler"
+  ],
+  "catalytic converter": [
+   "catalytic converter"
+  ],
+  "clutch": [
+   "clutch disc and pressure plate",
+   "clutch"
+  ]
+ }
+}

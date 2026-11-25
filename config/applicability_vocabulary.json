@@ -1,0 +1,93 @@
+{
+  "_comment": "Vocabulary for normalising applicability phrases found in manual structure (section/title/qualifier lines). Generic patterns plus aliases; edit per manual. Variant->engine implications must be supported by the manual (here: VIN section lists Shelby lines P8J/P8K and engine code Z = 5.8L supercharged).",
+  "engine_pattern": "\\b(\\d\\.\\d)\\s?L\\b",
+  "covered_engine_min_mentions": 50,
+  "variants": {
+    "GT500": {
+      "terms": [
+        "GT500",
+        "GT 500",
+        "Shelby"
+      ],
+      "implies": {
+        "engines": [
+          "5.8L"
+        ]
+      }
+    },
+    "SUPERCHARGED": {
+      "terms": [
+        "Supercharger",
+        "Supercharged"
+      ],
+      "implies": {
+        "engines": [
+          "5.8L"
+        ]
+      },
+      "basis": "manual VIN section: engine code Z is the only supercharged engine (5.8L)"
+    }
+  },
+  "transmission_terms": {
+    "automatic": [
+      "automatic transmission",
+      "automatic transaxle",
+      "6R80"
+    ],
+    "manual": [
+      "manual transmission",
+      "manual transaxle",
+      "MT82",
+      "TR6060",
+      "TR-6060"
+    ]
+  },
+  "transmission_codes": [
+    "6R80",
+    "MT82",
+    "TR6060"
+  ],
+  "body_terms": {
+    "coupe": [
+      "coupe"
+    ],
+    "convertible": [
+      "convertible"
+    ]
+  },
+  "user_aliases": {
+    "engines": {
+      "v6": "3.7L",
+      "3.7": "3.7L",
+      "3.7l": "3.7L",
+      "v8": null,
+      "5.0": "5.0L",
+      "5.0l": "5.0L",
+      "coyote": "5.0L",
+      "5.8": "5.8L",
+      "5.8l": "5.8L"
+    },
+    "model_inferences": {
+      "gt500": {
+        "engine": "5.8L",
+        "basis": "manual VIN section: Shelby line codes with engine code Z (5.8L supercharged)"
+      },
+      "shelby": {
+        "engine": "5.8L",
+        "basis": "manual VIN section: Shelby line codes with engine code Z (5.8L supercharged)"
+      },
+      "gt": {
+        "engine": "5.0L",
+        "basis": "common trim association; requires confirmation"
+      },
+      "boss 302": {
+        "engine": "5.0L",
+        "basis": "common trim association; requires confirmation"
+      },
+      "v6": {
+        "engine": "3.7L",
+        "basis": "manual lists a single 6-cylinder engine (3.7L, code M)"
+      }
+    }
+  }
+}
