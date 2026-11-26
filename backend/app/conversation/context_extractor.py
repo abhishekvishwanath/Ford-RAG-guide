@@ -20,6 +20,7 @@ from typing import Any
 
 from app.conversation.state import (
     REPAIR_SLOTS,
+    ActiveProcedure,
     SessionState,
     Slot,
     SlotStatus,
@@ -103,6 +104,7 @@ HAZARD_RULES: list[tuple[str, re.Pattern]] = [
         "fuel_leak",
         re.compile(
             r"\b((fuel|gas|gasoline|petrol) (is )?(leak\w*|dripping|pouring|spill\w*)|smell\w* (of )?(fuel|gas(oline)?)|"
+            r"(fuel|gas(oline)?|petrol) (smell|odou?r|fumes|puddle)\w*|puddle of (fuel|gas(oline)?|petrol)|"
             r"leaking (fuel|gas))\b",
             re.I,
         ),
@@ -212,6 +214,13 @@ def _is_followup(text: str, state: SessionState, ex: Extraction) -> bool:
     same_topic = bool(words & title_words) and (
         new_comp is None or bool(set(str(new_comp.value).split()) & title_words)
     )
+    if asks_detail and not same_topic and ap.vocab:
+        # "torque on the camshaft sprocket bolts?" after Timing Drive Components: the part is named in the
+        # procedure text though not in its title. A short detail question whose nouns are all there stays on it.
+        nouns = {w.rstrip("s") for w in re.findall(r"[a-z]{4,}", str(new_comp.value if new_comp else text).lower())}
+        nouns -= {"torque", "tighten", "spec", "what", "which", "where", "bolt", "does", "need", "with", "have"}
+        vocab = set(ap.vocab)
+        same_topic = bool(nouns) and len(text.split()) <= 14 and nouns <= vocab
     return bool(asks_detail and same_topic)
 
 
@@ -333,6 +342,9 @@ def rule_extract(text: str, state: SessionState, profile: ManualProfile) -> Extr
             ex.updates["variant"] = SlotUpdate("GT500")
         if "engine" not in ex.updates and "engine" not in ex.conflicts:
             ex.updates["engine"] = SlotUpdate(eng, SlotStatus.INFERRED, 0.7, basis=f"'{term}': {basis}")
+        elif "engine" in ex.updates and ex.updates["engine"].value != eng and term not in ("v6", "v8"):
+            # "a GT with the 3.7" — the stated engine contradicts the trim; ask rather than pick one
+            ex.conflicts["engine"] = [ex.updates.pop("engine").value, eng]
 
     auto, manual = bool(AUTO_RE.search(text)), bool(MANUAL_RE.search(text))
     if auto and not manual:
@@ -492,11 +504,50 @@ def extract(
 ) -> Extraction:
     ex = rule_extract(text, state, profile)
     if llm is not None:
+        rule_hazard = ex.hazard
         try:
             merge_llm(ex, llm_extract(llm, llm_model or "", text, state, history or []), text, state.vehicle_summary())
         except Exception as exc:  # LLM is an enhancement; rules still work
             logger.warning("llm extraction skipped: %s", type(exc).__name__)
+        if state.active_hazard and rule_hazard is None and ex.hazard:
+            # the LLM sees the history and re-flags the hazard already handled; only explicit new
+            # hazard wording in this message (rule detection) re-opens the safety stop
+            ex.hazard = None
     return ex
+
+
+# --------------------------------------------------------------------------- variant choice
+NUMBER_WORDS = {"one": "1", "two": "2", "three": "3", "four": "4", "five": "5", "six": "6", "eight": "8"}
+ORDINALS = {"first": 0, "1st": 0, "second": 1, "2nd": 1, "third": 2, "3rd": 2, "fourth": 3, "4th": 3}
+SIDE_WORDS = {"left": "lh", "right": "rh", "driver": "lh", "passenger": "rh"}
+
+
+def _tokens(s: str) -> set[str]:
+    toks = re.findall(r"[a-z0-9.]+", s.lower())
+    return {NUMBER_WORDS.get(t, SIDE_WORDS.get(t, t)) for t in toks} | {t.rstrip(".") for t in toks}
+
+
+def match_variant_option(text: str, options: list[str], ordinals: bool = True) -> int | None:
+    """Index of the option the reply picks ('4 piston', 'the LH one', 'second'), or None if unclear."""
+    from app.retrieval.context_expansion import VARIANT_SUFFIX_RE
+
+    low = text.lower().strip()
+    for i, opt in enumerate(options):
+        if opt.lower() in low:
+            return i
+    words = _tokens(low)
+    hits = []
+    for i, opt in enumerate(options):
+        m = VARIANT_SUFFIX_RE.search(opt)
+        suffix = _tokens(m.group(1)) - {"4v", "(4v)"} if m else set()
+        if suffix and suffix <= words:
+            hits.append(i)
+    if len(hits) == 1:
+        return hits[0]
+    for w, i in ORDINALS.items() if ordinals else ():
+        if re.search(rf"\b{w}\b", low) and i < len(options):
+            return i
+    return None
 
 
 # --------------------------------------------------------------------------- apply
@@ -511,6 +562,9 @@ def apply_extraction(state: SessionState, ex: Extraction, turn: int, text: str) 
     elif ex.safety_ack and state.active_hazard:
         state.safety_acknowledged = True
         events.append("hazard_acknowledged")
+        # "battery is disconnected, leak contained" describes the safe state, not a new job
+        for name in ("component", "task_type", "symptoms", "conditions"):
+            ex.updates.pop(name, None)
 
     # confirmation answers apply to the slots in the pending confirmation
     if pending and pending.kind == "confirmation" and ex.confirmation is not None:
@@ -526,6 +580,18 @@ def apply_extraction(state: SessionState, ex: Extraction, turn: int, text: str) 
             elif name not in ex.updates:
                 state.clear_slot(name)
                 events.append(f"rejected:{name}")
+
+    if pending and pending.option_ids:
+        idx = match_variant_option(text, pending.options)
+        if idx is not None:
+            state.chosen_variant = ActiveProcedure(
+                parent_id=pending.option_ids[idx],
+                procedure_id=pending.option_ids[idx].removeprefix("proc_"),
+                title=pending.options[idx],
+                turn=turn,
+            )
+            ex.updates.pop("component", None)  # "4 piston" is a variant choice, not a new task
+            events.append(f"variant_selected:{pending.options[idx]}")
 
     if ex.unsure and pending and pending.kind == "information":
         for name in pending.slots:
@@ -543,6 +609,7 @@ def apply_extraction(state: SessionState, ex: Extraction, turn: int, text: str) 
             if name != "component" and name not in ex.updates:
                 state.clear_slot(name)
         state.active_procedure = None
+        state.chosen_variant = None
         state.soft_asked = []
         events.append("task_changed")
 
@@ -554,6 +621,15 @@ def apply_extraction(state: SessionState, ex: Extraction, turn: int, text: str) 
     for name, up in ex.updates.items():
         cur = state.slot(name)
         answering = pending is not None and name in pending.slots
+        if cur.conflict_with not in (None, [], "") and (answering or ex.correction):
+            # the technician picked one of the competing values: it wins and the conflict is resolved
+            state.set_slot(Slot(name=name, value=up.value, status=SlotStatus.CONFIRMED, confidence=1.0, turn=turn,
+                                basis="chosen to resolve a conflict", source_text=text[:200]))  # fmt: skip
+            events.append(f"conflict_resolved:{name}")
+            if name in ("model_year", "engine", "transmission", "body_style"):
+                state.active_procedure = None
+                state.chosen_variant = None
+            continue
         if cur.filled and cur.value != up.value and cur.status in (SlotStatus.CONFIRMED, SlotStatus.USER_PROVIDED):
             if name in ("task_type", "symptoms", "conditions", "previous_checks", "measurements", "component", "dtcs"):
                 pass  # repair details naturally evolve
@@ -567,6 +643,7 @@ def apply_extraction(state: SessionState, ex: Extraction, turn: int, text: str) 
                 events.append(f"corrected:{name}")
                 if name in ("model_year", "engine", "transmission", "body_style"):
                     state.active_procedure = None  # vehicle changed: old evidence no longer applies
+                    state.chosen_variant = None
         if cur.filled and cur.value == up.value and STATUS_STRENGTH[cur.status] >= STATUS_STRENGTH[up.status]:
             continue  # a restatement never downgrades provenance (e.g. an LLM echo of a known fact)
         state.set_slot(Slot(name=name, value=up.value, status=up.status, confidence=up.confidence, turn=turn,

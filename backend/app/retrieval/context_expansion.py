@@ -19,7 +19,12 @@ from app.schemas.retrieval import Candidate, EvidenceItem, RetrievalRequest
 from app.services.manual_repository import ManualRepository
 
 PROCEDURAL_TASKS = {"replace", "removal", "installation", "repair", "service", "adjust", "inspect", "disassembly"}
-VARIANT_SUFFIX_RE = re.compile(r"\s*[—–-]\s*(\d\.\dL.*|GT500.*|Coupe|Convertible|Shelby.*)$", re.I)
+# title suffixes that distinguish otherwise-identical procedures (engine, body, caliper type, side…)
+VARIANT_SUFFIX_RE = re.compile(
+    r"\s*[—–-]\s*(\d\.\dL.*|GT500.*|Coupe|Convertible|Shelby.*|\d\s*Piston.*|LH|RH|Front|Rear|Center"
+    r"|Automatic Transmission|Manual Transmission)$",
+    re.I,
+)
 
 
 @dataclass
@@ -30,22 +35,125 @@ class ExpansionConfig:
     max_other_procedures: int = 3
 
 
+R_AND_I = {"REMOVAL AND INSTALLATION", "IN-VEHICLE REPAIR", "REMOVAL", "INSTALLATION"}
+SHOP = {"GENERAL PROCEDURES", "DISASSEMBLY AND ASSEMBLY", "DISASSEMBLY AND ASSEMBLY OF SUBASSEMBLIES", "DISASSEMBLY",
+        "ASSEMBLY"}  # fmt: skip
+DOC_TYPE_FIT: dict[str, dict[str, float]] = {
+    # task -> {doc type: bonus}; a procedure of a fitting type is preferred as the main one
+    "replace": {**dict.fromkeys(R_AND_I, 0.35), **dict.fromkeys(SHOP, 0.15)},
+    "removal": {**dict.fromkeys(R_AND_I, 0.35), **dict.fromkeys(SHOP, 0.15)},
+    "installation": {**dict.fromkeys(R_AND_I, 0.35), **dict.fromkeys(SHOP, 0.15)},
+    "repair": {**dict.fromkeys(R_AND_I, 0.35), **dict.fromkeys(SHOP, 0.25)},
+    "disassembly": {**dict.fromkeys(SHOP, 0.35), **dict.fromkeys(R_AND_I, 0.15)},
+    "inspect": {"GENERAL PROCEDURES": 0.35, "DIAGNOSIS AND TESTING": 0.2},
+    "adjust": {"GENERAL PROCEDURES": 0.35},
+    "service": {"GENERAL PROCEDURES": 0.35, **dict.fromkeys(R_AND_I, 0.15)},
+    "diagnose": {"DIAGNOSIS AND TESTING": 0.35},
+    "overview": {"DESCRIPTION AND OPERATION": 0.35},
+    "specification": {"SPECIFICATIONS": 0.35},
+}
+STOP = {"and", "the", "a", "of", "to", "on", "in", "for", "with", "my", "is", "it", "how", "do", "i", "what"}
+
+
+def _title_words(s: str | None) -> set[str]:
+    return {w.rstrip("s") for w in re.findall(r"[a-z]+", (s or "").lower()) if w not in STOP and len(w) > 1}
+
+
+def choose_main_parent(req: RetrievalRequest, hits: list[Chunk]) -> str:
+    """Pick the procedure the answer is about: rank weight + task/doc-type fit + title match.
+
+    The top-ranked chunk alone is not enough: a 'Clutch' diagnosis page can outrank the 'Clutch Disc and
+    Pressure Plate' removal procedure for a replacement job, and the front hub can outrank the rear one."""
+    fit = DOC_TYPE_FIT.get(req.task_type or "", {})
+    asked = _title_words(" ".join(filter(None, [req.original_message, req.task_text, req.component])))
+    scores: dict[str, float] = {}
+    for rank, h in enumerate(hits):
+        scores[h.parent_id] = scores.get(h.parent_id, 0.0) + 1.0 / (rank + 2)
+    seen: set[str] = set()
+    for h in hits:
+        if h.parent_id in seen:
+            continue
+        seen.add(h.parent_id)
+        scores[h.parent_id] += fit.get(h.doc_type or "", 0.0)
+        # each title word the technician used counts: "Clutch Disc and Pressure Plate" beats "Clutch"
+        tw = _title_words(base_title(h.procedure_title) if h.procedure_title else None)
+        scores[h.parent_id] += 0.15 * len(tw & asked)
+    return max(scores, key=lambda p: (scores[p], -next(i for i, h in enumerate(hits) if h.parent_id == p)))
+
+
+SPEC_Q_RE = re.compile(r"\b(spec|specs|specification|torque|tighten|gap|clearance|capacity|limits?|angle|tolerance)\b", re.I)
+
+
+def section_spec_chunk(req: RetrievalRequest, main: Chunk, repo: ManualRepository, flt: VehicleFilter) -> Chunk | None:
+    """For a spec question about a procedure, the section's SPECIFICATIONS table chunk that best matches it."""
+    if not SPEC_Q_RE.search(req.original_message) or (main.doc_type or "") == "SPECIFICATIONS":
+        return None
+    asked = _title_words(" ".join(filter(None, [req.original_message, req.component, main.procedure_title])))
+    asked -= {"spec", "specification", "torque", "what", "mustang", "doing", "adjusted", "adjust", "adjustment"}
+    best, best_score = None, 0
+    for p in repo.procedures.values():
+        if p.section_code != main.section_code or (p.doc_type or "") != "SPECIFICATIONS":
+            continue
+        for cid in p.chunk_ids:
+            ch = repo.chunk(cid)
+            if ch is None or not flt.allows(ch):
+                continue
+            score = len(asked & _title_words(ch.content))
+            if score > best_score:
+                best, best_score = ch, score
+    return best if best_score >= 1 else None
+
+
 def base_title(title: str | None) -> str:
     return VARIANT_SUFFIX_RE.sub("", title or "").strip().lower()
 
 
 def detect_variant_ambiguity(cands: list[Candidate], repo: ManualRepository, flt: VehicleFilter) -> list[str]:
     """Two compatible procedures that differ only by a variant suffix the user hasn't specified."""
-    titles: dict[str, set[str]] = {}
+    return list(variant_options(cands, repo))
+
+
+AXLE_RE = re.compile(r"\b(front|rear)\b", re.I)
+
+
+def variant_options(
+    cands: list[Candidate], repo: ManualRepository, flt: VehicleFilter | None = None, message: str = ""
+) -> dict[str, str]:
+    """title -> parent_id for procedures that differ only by a variant suffix.
+
+    Ambiguity is detected among the top candidates; the options offered are then completed from the whole
+    catalogue (same base title and doc type, compatible with the vehicle), so a '4 Piston' variant that did
+    not happen to rank is still offered. 'front'/'rear' in the question removes the other axle's sections."""
+    groups: dict[str, dict[str, str]] = {}
+    doc_types: dict[str, set[str]] = {}
     for c in cands:
         ch = repo.chunk(c.chunk_id)
         if ch is None or not ch.procedure_title:
             continue
-        titles.setdefault(base_title(ch.procedure_title), set()).add(ch.procedure_title)
-    out: list[str] = []
-    for variants in titles.values():
+        key = base_title(ch.procedure_title)
+        groups.setdefault(key, {}).setdefault(ch.procedure_title, ch.parent_id)
+        doc_types.setdefault(key, set()).add(ch.doc_type or "")
+    axle = AXLE_RE.search(message)
+    other_axle = {"front": "rear", "rear": "front"}[axle.group(1).lower()] if axle else None
+    out: dict[str, str] = {}
+    for key, variants in groups.items():
+        if len(variants) < 2:
+            continue
+        for p in repo.procedures.values():
+            if not p.title or base_title(p.title) != key or (p.doc_type or "") not in doc_types[key]:
+                continue
+            first = repo.chunk(p.chunk_ids[0]) if p.chunk_ids else None
+            if flt is not None and first is not None and not flt.allows(first):
+                continue
+            variants.setdefault(p.title, p.parent_id)
+        if other_axle:
+            for title, pid in list(variants.items()):
+                proc = repo.procedures.get(pid)
+                where = f"{proc.section_name if proc else ''} {title}".lower()
+                if other_axle in where and len(variants) > 1:
+                    del variants[title]
         if len(variants) > 1:
-            out.extend(sorted(variants))
+            out.update(dict(sorted(variants.items())))
     return out
 
 
@@ -61,7 +169,7 @@ def expand(
         return []
     score_of = {c.chunk_id: (c.rerank_score if c.rerank_score is not None else c.rrf_score) for c in ranked}
     hits: list[Chunk] = [h for h in (repo.chunk(c.chunk_id) for c in primary) if h is not None]
-    main_parent = req.focus_parent_id if req.focus_parent_id in {h.parent_id for h in hits} else hits[0].parent_id
+    main_parent = req.focus_parent_id if req.focus_parent_id in {h.parent_id for h in hits} else choose_main_parent(req, hits)
     if req.focus_parent_id and req.focus_parent_id in repo.procedures and req.focus_steps:
         main_parent = req.focus_parent_id
 
@@ -104,6 +212,16 @@ def expand(
                 if abs(nb.sequence_index - h.sequence_index) == 1:
                     add(nb, True)
 
+    main_chunk = next((c for c in family_ok), None)
+    spec = section_spec_chunk(req, main_chunk, repo, flt) if main_chunk else None
+    if spec is not None and spec.chunk_id not in selected:
+        if len(selected) >= cfg.max_chunks:  # make room: drop the last expanded neighbour
+            drop = next((cid for cid in reversed(list(selected)) if selected[cid]), None)
+            if drop:
+                budget += repo.chunk(drop).token_count  # type: ignore[union-attr]
+                del selected[drop]
+        add(spec, False)
+
     others = 0
     seen_parents = {main_parent}
     for h in hits:
@@ -118,7 +236,7 @@ def expand(
             seen_parents.add(h.parent_id)
 
     chunks = [repo.chunk(cid) for cid in selected]
-    order = {main_parent: 0}
+    order = {main_parent: 0}  # main procedure first, others in rank order
     for i, h in enumerate(hits):
         order.setdefault(h.parent_id, i + 1)
     chunks.sort(key=lambda c: (order.get(c.parent_id, 99), c.sequence_index))  # type: ignore[union-attr]

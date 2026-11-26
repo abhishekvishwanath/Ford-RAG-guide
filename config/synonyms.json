@@ -198,7 +198,6 @@
    "engine oil draining and filling"
   ],
   "timing chain": [
-   "timing chain",
    "timing drive components"
   ],
   "exhaust": [
@@ -214,6 +213,28 @@
   "clutch": [
    "clutch disc and pressure plate",
    "clutch"
+  ],
+  "camshaft sprocket": [
+   "variable camshaft timing",
+   "vct"
+  ],
+  "cam sprocket": [
+   "variable camshaft timing",
+   "vct"
+  ],
+  "cam gear": [
+   "variable camshaft timing",
+   "vct"
+  ],
+  "cam phaser": [
+   "variable camshaft timing",
+   "vct"
+  ],
+  "timing chains": [
+   "timing drive components"
+  ],
+  "fluid level": [
+   "fluid level check"
   ]
  }
 }

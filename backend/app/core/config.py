@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     groq_api_key: SecretStr = SecretStr("")
     llm_model: str = "openai/gpt-oss-120b"
     llm_extraction_model: str = "openai/gpt-oss-20b"
+    # used for generation when the main model is rate-limited (e.g. Groq's daily token cap); "" disables
+    llm_fallback_model: str = "openai/gpt-oss-20b"
     llm_timeout_seconds: float = 60.0
     llm_max_retries: int = 2
     llm_max_output_tokens: int = 1800

@@ -62,7 +62,15 @@ class GroqLLMClient:
         try:
             resp = self.client.chat.completions.create(**kwargs)
         except Exception as exc:
-            log_event(logger, "llm call failed", logging.WARNING, model=model, error=type(exc).__name__)
+            log_event(logger, "llm call failed", logging.WARNING, model=model, error=type(exc).__name__,
+                      detail=str(getattr(exc, "message", exc))[:300])  # fmt: skip
+            fallback = self.s.llm_fallback_model
+            if type(exc).__name__ == "RateLimitError" and fallback and fallback != model:
+                # quota on the main model (each Groq model has its own limits): answer with the fallback;
+                # the validator checks its output exactly as strictly
+                log_event(logger, "llm fallback model", logging.WARNING, model=fallback, instead_of=model)
+                return self.complete(messages, model=fallback, json_mode=json_mode, max_tokens=max_tokens,
+                                     temperature=temperature, reasoning_effort=reasoning_effort)  # fmt: skip
             raise LLMUnavailableError("The language model is currently unavailable.") from exc
         content = resp.choices[0].message.content or ""
         log_event(

@@ -20,6 +20,7 @@ class RetrievalRequest(BaseModel):
     focus_parent_id: str | None = None  # follow-up: prefer the active procedure
     focus_steps: list[int] = Field(default_factory=list)  # follow-up "step 4"
     preferred_chunk_types: list[str] = Field(default_factory=list)
+    task_text: str = ""  # the technician's wording of the job, when this turn only answered a question
 
 
 class Candidate(BaseModel):
@@ -88,6 +89,7 @@ class EvidencePackage(BaseModel):
     sufficient: bool = False
     insufficiency_reason: str | None = None
     variant_ambiguity: list[str] = Field(default_factory=list)  # procedure titles differing only by variant
+    variant_parent_ids: list[str] = Field(default_factory=list)  # parallel to variant_ambiguity
     token_estimate: int = 0
 
 

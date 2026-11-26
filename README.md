@@ -38,6 +38,8 @@ cd frontend && npm install && npm run dev            # http://localhost:5173
 | Measure | Result |
 |---|---|
 | Retrieval Recall@5 / MRR / nDCG@5 (48 verified cases) | 0.958 / 0.788 / 0.823 |
+| Procedure completeness / diagram precision | 0.97 / 0.84 |
+| Live technician stress test (10 hard conversations) | after fixes: 8 fully answered; 2 ended in verbatim manual excerpts because a model answer was rejected (report §8) |
 | Wrong-variant chunks in top 5 | 0.00 (1.02 without the applicability filter) |
 | Structure-based vs fixed-size vs recursive chunking (MRR) | 0.788 vs 0.671 vs 0.625 |
 | Readiness gate decision accuracy (29 turns) / premature retrievals | 1.00 / 0 |

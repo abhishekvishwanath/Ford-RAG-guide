@@ -28,10 +28,10 @@ Additional full-system metrics:
 
 | Metric | Value |
 |---|---|
-| Procedure completeness (expected procedure's chunks present after expansion) | 0.92 |
-| Citation page correct (top evidence page inside expected range) | 0.65 |
+| Procedure completeness (expected procedure's chunks present after expansion) | 0.97 (was 0.92) |
+| Citation page correct (top evidence page inside expected range) | 0.75 (was 0.65) |
 | Evidence judged sufficient | 0.98 |
-| Figure precision / recall (n = 37 cases whose procedure has diagrams) | 0.73 / 0.73 |
+| Figure precision / recall (n = 37 cases whose procedure has diagrams) | 0.84 / 0.84 (was 0.73) |
 
 **Reading the numbers**
 - The applicability filter matters most for ranking: without it, about one chunk in every top 5 belongs to
@@ -39,7 +39,8 @@ Additional full-system metrics:
 - BM25 alone misses paraphrased queries; dense alone ranks well but is less precise; the fusion wins.
 - **P@5 is structurally low**: most questions have exactly one relevant procedure. When it occupies one or two
   of the five slots, P@5 can't go above 0.2–0.4. Recall, MRR and completeness are the meaningful measures here.
-- Citation page correctness (0.65) is strict. It counts a citation as wrong when the top chunk is from the
+- "Was" values are from before the technician stress test (§8), whose fixes chose the main procedure better.
+- Citation page correctness (0.75) is strict. It counts a citation as wrong when the top chunk is from the
   right procedure but begins on a different page of a multi-page procedure.
 
 ### Reranker strategy experiment
@@ -128,7 +129,56 @@ wrongly or two steps in the wrong order. A human or LLM-judge review of answers 
 - 48 retrieval cases and 16 conversations are enough to compare designs. They're too few to make precise
   population claims; the differences of ±0.02 in the tables are within noise.
 - The cases were written by the builder against the manual's catalogue. Real technician phrasing may differ.
-- Figure linkage is 0.73 precision/recall. Some diagrams sit on a page next to the steps they illustrate, not on the same page.
+- Figure linkage is 0.84 precision/recall. Some diagrams sit on a page next to the steps they illustrate, not on the same page.
 - The Groq on-demand tier (8k TPM) forces prompt trimming and spacing between calls. A higher tier would allow
   larger evidence budgets and concurrent users.
 - Faithfulness is checked lexically, not semantically (see §5).
+
+## 8. Technician stress test (10 live conversations)
+
+`scripts/run_technician_scenarios.py` runs ten hard, technician-style conversations through the live API.
+They cover trim-name inference, caliper variants, follow-ups, a hazard, an out-of-scope year, a spec
+lookup and a contradictory engine. Answers were graded against facts pulled from the manual.
+
+| # | Scenario | First run | After fixes |
+|---|---|---|---|
+| T01 | GT spark plugs: torque, then gap | Gap answer (1.25–1.35 mm) rejected by the validator | ✅ Both answered. The 14 vs 15 Nm torque is flagged because the manual lists both (ignition vs engine section). |
+| T02 | Front pads on a GT | Blended the 2-piston procedure. Irrelevant coupe/convertible question. | ✅ Asks 2/4/6-piston, answers the 4-piston procedure. No body-style question. |
+| T03 | 5.0 clutch disc + pressure plate | Diagnosis pages chosen as main procedure. Wrong diagrams. | ✅ Clutch Disc and Pressure Plate — 5.0L is the main procedure, with its own diagrams. |
+| T04 | GT500 accessory belt + routing | ✅ | ✅ |
+| T05 | V6 automatic fluid level | Level-check procedure not retrieved | ✅ Retrieved. Model invented an 80 °C figure → rejected → focused excerpts. |
+| T06 | Fuel smell + puddle, then fuel pump module | "Safe now" turned the job into *battery / diagnose*. A false **fire** escalation followed. | ✅ Stop-work first, then the fuel pump module procedure with its fuel warnings |
+| T07 | 2011 (out of scope) → corrected to 2014 | Front hub diagram shown for a rear axle seal | ✅ Rear Wheel Bearing and Axle Shaft Seal and its own diagrams |
+| T08 | 5.0 timing chains → tools → "camshaft sprocket bolts" | First answer rejected ("4V" read as 4 volts). Sprocket follow-up lost the procedure. | ✅ Answers and tools. The follow-up stays on Timing Drive Components. The fallback model (quota) answered the torque question without citations → excerpts. |
+| T09 | Front camber: method + spec | Spec missing from evidence | ✅ Procedure plus −0.75° ± 0.75° from the section spec table |
+| T10 | "2014 GT with the 3.7 V6" | Contradiction not noticed | ✅ Asks which engine. The answer resolves it in one turn. |
+
+**Fixes made from these findings**
+- Variant detection covers caliper type (`— 2/4/6 Piston`), side (LH/RH), axle (Front/Rear) and transmission
+  suffixes. Options come from the whole catalogue, filtered by vehicle and by "front"/"rear" in the question.
+  The reply ("4 piston", "driver side", "second") is matched to an option and becomes the focus procedure.
+  A variant already named in the question is used directly instead of being asked back.
+- Main-procedure choice scores the top hits by rank, by how well the doc type fits the task (e.g. Removal and
+  Installation for a replacement) and by each title word the technician used. Previously it was simply the top hit.
+- A spec/torque/gap question adds the best-matching row block of the section's SPECIFICATIONS table.
+- Short replies ("yes", "coupe") reuse the technician's original wording of the job for search and reranking.
+- Safety: an acknowledgement never changes the job. The extraction LLM cannot re-open an acknowledged hazard
+  (it re-read the history). "Fuel smell/puddle" was added to the rule-based hazards.
+- A trim that contradicts a stated engine ("GT" + "3.7") is a conflict. Choosing one value resolves it.
+- Validator: each end of a range ("1.25 - 1.35 mm") is a checkable value. Titles and section names count as
+  evidence. The diagram fallback uses the cited procedure.
+- Follow-ups: the active procedure keeps its vocabulary, so "camshaft sprocket bolts" stays on Timing Drive
+  Components. Manual-term synonyms were added (cam sprocket/phaser → VCT, timing chain → Timing Drive Components, ATF).
+- Readiness ignores look-alike catalogue matches ("Stay Pad" for "pads") when deciding which variant to ask about.
+- Fallback excerpts are ranked by relevance to the question, and long spec tables are cut to the rows asked about.
+- Groq: the on-demand tier has a **200,000 tokens/day** cap on `gpt-oss-120b`, which a day of testing used up.
+  The client now falls back to `LLM_FALLBACK_MODEL` (`gpt-oss-20b`, which has its own quota) on rate limits.
+  The same validator applies.
+
+**Remaining issues seen**
+- The smaller fallback model sometimes omits citations, so the answer is rejected and the technician gets
+  focused manual excerpts instead.
+- Labels can be slightly off even when values are right. T02 called the 115 Nm 2-piston *anchor-plate* row
+  applicable to a 4-piston caliper; the 4/6-piston caliper bolt is also 115 Nm. Values are checked, wording is not.
+- Retrieval benchmark after the fixes: Recall@5 / MRR unchanged (0.958 / 0.788). Completeness 0.92 → 0.97,
+  citation page 0.65 → 0.75, figure P/R 0.73 → 0.84. Gate benchmark unchanged (1.0, 0 premature retrievals).

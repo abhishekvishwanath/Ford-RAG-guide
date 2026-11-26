@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 
 from app.conversation import context_extractor as cx
 from app.conversation.question_planner import describe_context, plan_question
@@ -214,7 +215,8 @@ def handle_insufficient_evidence(state: GraphState, deps: GraphDeps) -> GraphSta
             + "\nWhich one matches your vehicle?"
         )
         session.pending_question = PendingQuestion(slots=["component"], kind="information", text=msg,
-                                                   options=pkg.variant_ambiguity[:5], asked_turn=session.turn)  # fmt: skip
+                                                   options=pkg.variant_ambiguity[:5], option_ids=pkg.variant_parent_ids[:5],
+                                                   asked_turn=session.turn)  # fmt: skip
         mode = "asking_context"
     else:
         msg = (
@@ -268,13 +270,13 @@ def attach_citations(state: GraphState, deps: GraphDeps) -> GraphState:
     citations = deps.generator.citations(answer, pkg)  # type: ignore[union-attr]
     cited = {c.chunk_id for c in citations}
     cited_sources = {c.source_id for c in citations}
-    main_parent = pkg.items[0].parent_id if pkg.items else None
+    main = next((i for i in pkg.items if i.chunk_id in cited), pkg.items[0] if pkg.items else None)
+    main_parent = main.parent_id if main else None
     by_source = {i.source_id: i for i in pkg.items}
-    # show only diagrams tied to evidence the answer actually cites (fallback: the main procedure's)
+    # show only diagrams tied to evidence the answer actually cites (fallback: the cited procedure's)
     pkg.images = [im for im in pkg.images if im.source_id in cited_sources] or [
         im for im in pkg.images if im.source_id in by_source and by_source[im.source_id].parent_id == main_parent
     ]
-    main = next((i for i in pkg.items if i.chunk_id in cited), pkg.items[0] if pkg.items else None)
     if main is not None:
         session.active_procedure = ActiveProcedure(
             parent_id=main.parent_id,
@@ -283,6 +285,8 @@ def attach_citations(state: GraphState, deps: GraphDeps) -> GraphState:
             subsection=main.subsection,
             chunk_ids=[i.chunk_id for i in pkg.items],
             figure_ids=[im.figure_id for im in pkg.images],
+            vocab=sorted({w.rstrip("s") for i in pkg.items if i.parent_id == main.parent_id
+                          for w in re.findall(r"[a-z]{4,}", i.content.lower())})[:3000],
             turn=session.turn,
         )
     session.recent_evidence = [

@@ -11,12 +11,12 @@ import logging
 import re
 from dataclasses import dataclass
 
-from app.conversation.context_extractor import Extraction, manual_terms_for
+from app.conversation.context_extractor import Extraction, manual_terms_for, match_variant_option
 from app.conversation.state import SessionState
 from app.core.config import Settings
 from app.retrieval.applicability_filter import VehicleFilter
 from app.retrieval.bm25_search import BM25Index
-from app.retrieval.context_expansion import ExpansionConfig, detect_variant_ambiguity, expand
+from app.retrieval.context_expansion import ExpansionConfig, expand, variant_options
 from app.retrieval.fusion import rrf_fuse
 from app.retrieval.reranker import NoopReranker, Reranker, probability
 from app.retrieval.visual_retrieval import retrieve_images, retrieve_tables
@@ -114,11 +114,15 @@ def build_request(state: SessionState, message: str, extraction: Extraction | No
     if comp:
         terms += [t for t in manual_terms_for(comp) if t not in terms]
     is_followup = bool(extraction and extraction.is_followup and state.active_procedure)
-    focus = state.active_procedure if is_followup else None
+    focus = state.active_procedure if is_followup else state.chosen_variant
     steps = [int(s) for s in STEP_REF_RE.findall(message)]
     dtcs = state.value("dtcs") or []
     engine = state.value("engine")
-    sem_parts = [message]
+    # a short reply ("yes", "coupe", "4 piston") carries no search terms: reuse how the job was described
+    task_text = (state.slot("component").source_text or "").strip()
+    if not task_text or task_text.lower() == message.strip().lower() or focus or len(message.split()) > 6:
+        task_text = ""
+    sem_parts = [message, task_text]
     if focus:
         sem_parts.insert(0, " ".join(filter(None, [focus.title, focus.subsection])))
     if comp and comp.lower() not in message.lower():
@@ -126,7 +130,7 @@ def build_request(state: SessionState, message: str, extraction: Extraction | No
     sem_parts += terms
     if task and not focus:
         sem_parts.append(TASK_QUERY_TERMS.get(task, ""))
-    kw_parts = [message, *terms, *dtcs, *IDENT_RE.findall(message)]
+    kw_parts = [message, task_text, *terms, *dtcs, *IDENT_RE.findall(message)]
     if focus and focus.title:
         kw_parts.append(focus.title)
     if comp:
@@ -153,6 +157,7 @@ def build_request(state: SessionState, message: str, extraction: Extraction | No
         focus_parent_id=focus.parent_id if focus else None,
         focus_steps=steps,
         preferred_chunk_types=preferred,
+        task_text=task_text,
     )
 
 
@@ -205,7 +210,7 @@ class HybridRetrievalPipeline:
     def rerank_queries(request: RetrievalRequest) -> list[str]:
         """Cross-encoders score far better with manual terminology: rewrite user wording with synonyms
         and add a structured '<manual term> <task> <engine>' query. Facts are never changed."""
-        msg = request.original_message
+        msg = request.task_text or request.original_message
         term = request.manual_terms[0] if request.manual_terms else request.component
         if request.component and term and request.component != term:
             msg = re.sub(re.escape(request.component), term, msg, flags=re.I)
@@ -214,6 +219,10 @@ class HybridRetrievalPipeline:
         structured = " ".join(filter(None, [term, TASK_PHRASES.get(request.task_type or "", "")]))
         return [q for q in dict.fromkeys([msg, structured]) if q]
 
+    def _parent(self, chunk_id: str) -> str | None:
+        ch = self.repo.chunk(chunk_id)
+        return ch.parent_id if ch else None
+
     def rerank(self, request: RetrievalRequest, candidates: list[Candidate]) -> list[Candidate]:
         """Rank-fuse the hybrid order with the cross-encoder order (RRF, k=rerank_fusion_k).
 
@@ -221,6 +230,18 @@ class HybridRetrievalPipeline:
         worse than hybrid retrieval on this manual, while fusing both ranks is best; a task-type
         tie-breaker did not help and was removed. Follow-up focus/step boosts are kept."""
         pool = candidates[: self.cfg.rerank_candidates]
+        if request.focus_parent_id:
+            # a chosen/active procedure must be rankable even when the search ranked it low
+            in_pool = {c.chunk_id for c in pool}
+            vf = VehicleFilter.from_request(request, self.cfg.strictness)
+            missing = [c for c in candidates[len(pool):] if self._parent(c.chunk_id) == request.focus_parent_id]
+            missing += [
+                Candidate(chunk_id=ch.chunk_id, applicability="matches")
+                for ch in self.repo.parent_chunks(request.focus_parent_id)
+                if vf.allows(ch) and ch.chunk_id not in in_pool and ch.chunk_id not in {m.chunk_id for m in missing}
+            ]
+            pool = pool + missing[: max(0, 8 - sum(self._parent(c.chunk_id) == request.focus_parent_id for c in pool))]
+            candidates = pool + [c for c in candidates if c.chunk_id not in {p.chunk_id for p in pool}]
         active = self.reranker.name != "none"
         rerank_pos: dict[int, int] = {}
         best: list[float | None] = [None] * len(pool)
@@ -251,14 +272,27 @@ class HybridRetrievalPipeline:
             b = best[i]
             c.rerank_raw = round(probability(b), 4) if b is not None else None
             c.rerank_score = round(score, 5)
-        return sorted(pool, key=lambda c: -(c.rerank_score or 0.0)) + candidates[self.cfg.rerank_candidates :]
+        return sorted(pool, key=lambda c: -(c.rerank_score or 0.0)) + candidates[len(pool) :]
 
     def expand(self, request: RetrievalRequest, candidates: list[Candidate]) -> EvidencePackage:
         flt = VehicleFilter.from_request(request, self.cfg.strictness)
         cfg = self.cfg.expansion or ExpansionConfig(self.cfg.top_k)
+        opts = variant_options(
+            candidates[: self.cfg.top_k], self.repo, flt, f"{request.task_text} {request.original_message}"
+        )
+        picked = match_variant_option(request.original_message, list(opts), ordinals=False) if opts else None
+        if picked is not None and not request.focus_parent_id:
+            # "replace a front 4 piston caliper": the question already names the variant
+            pid = list(opts.values())[picked]
+            request = request.model_copy(update={"focus_parent_id": pid})
+            family = [Candidate(chunk_id=c.chunk_id, applicability="matches")
+                      for c in self.repo.parent_chunks(pid) if flt.allows(c)]  # fmt: skip
+            fam_ids = {c.chunk_id for c in family}
+            candidates = family + [c for c in candidates if c.chunk_id not in fam_ids]
+            opts = {}
         items = expand(request, candidates, self.repo, flt, cfg)
         pkg = EvidencePackage(request=request, items=items, candidates=candidates[: self.cfg.top_k * 2])
-        pkg.variant_ambiguity = detect_variant_ambiguity(candidates[: self.cfg.top_k], self.repo, flt)
+        pkg.variant_ambiguity, pkg.variant_parent_ids = list(opts), list(opts.values())
         pkg.token_estimate = sum(self.repo.chunk(i.chunk_id).token_count for i in items)  # type: ignore[union-attr]
         return pkg
 
@@ -296,6 +330,6 @@ class HybridRetrievalPipeline:
             package.sufficient = False
             package.insufficiency_reason = "multiple manual variants match"
             return package
-        package.variant_ambiguity = []
+        package.variant_ambiguity, package.variant_parent_ids = [], []
         package.sufficient = True
         return package

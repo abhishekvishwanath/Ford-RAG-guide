@@ -201,3 +201,42 @@ def test_short_answer_is_not_reinterpreted_as_component():
     _, events, d = turn(s, "manual")
     assert "task_changed" not in events and s.value("task_type") == "replace"
     assert s.value("transmission") == "manual"
+
+
+def test_trim_contradicting_stated_engine_is_a_conflict():
+    _, _, d = turn(new(), "2014 GT with the 3.7 v6, need to replace the coolant pump")
+    assert d.status == ReadinessStatus.NEEDS_CONFIRMATION and "engine" in d.conflicts
+
+
+def test_safety_acknowledgement_does_not_change_the_task():
+    s = new()
+    _, _, d = turn(s, "strong fuel smell and a puddle under the car, 2014 5.0 fuel pump module removal")
+    assert d.status == ReadinessStatus.SAFETY_ESCALATION
+    comp = s.value("component")
+    _, events, _ = turn(s, "car is outside, battery is disconnected and the leak is contained. continue")
+    assert "hazard_acknowledged" in events and s.value("component") == comp
+
+
+class _HazardEchoLLM:
+    """An extraction model that keeps re-flagging the earlier hazard from history."""
+
+    def complete(self, *a, **k):  # noqa: ANN002, ANN003
+        return '{"immediate_hazard": "fuel leak fire risk", "transmission": "manual"}'
+
+
+def test_llm_cannot_reopen_an_acknowledged_hazard():
+    s = new()
+    turn(s, "strong fuel smell and a puddle under the car, 2014 5.0 fuel pump module removal")
+    turn(s, "it's safe now, leak contained")
+    ex = cx.extract("manual", s, make_profile(), llm=_HazardEchoLLM(), llm_model="m")  # type: ignore[arg-type]
+    assert ex.hazard is None
+
+
+def test_answering_a_conflict_with_one_value_resolves_it():
+    s = new()
+    _, _, d = turn(s, "2014 GT with the 3.7 v6, need to replace the coolant pump")
+    assert "engine" in d.conflicts
+    s.pending_question = PendingQuestion(slots=["engine"], kind="confirmation", text="which?")
+    _, events, d = turn(s, "it's actually a V6, the 3.7L")
+    assert "conflict_resolved:engine" in events and s.value("engine") == "3.7L"
+    assert d.status == ReadinessStatus.READY

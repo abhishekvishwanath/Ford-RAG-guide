@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from app.conversation.question_planner import describe_context
 from app.conversation.state import SessionState
 from app.core.config import Settings
@@ -9,12 +11,48 @@ from app.generation import response_validator as rv
 from app.generation.llm_client import LLMClient
 from app.generation.prompts import build_messages
 from app.memory.session_store import SessionRepository
-from app.schemas.retrieval import Citation, EvidencePackage, GeneratedAnswer
+from app.schemas.retrieval import Citation, EvidenceItem, EvidencePackage, GeneratedAnswer
 
 
 def estimate_tokens(messages: list[dict]) -> int:
     """Conservative estimate for the provider tokenizer (technical text ~3.2 chars/token)."""
     return int(sum(len(m["content"]) for m in messages) / 3.2) + 16 * len(messages)
+
+
+FALLBACK_STOP = {"what", "which", "the", "and", "for", "how", "should", "they", "have", "does", "with", "this",
+                 "that", "there", "need", "torque", "spec", "specs", "specification"}  # fmt: skip
+
+
+def _qwords(text: str) -> set[str]:
+    return {w.rstrip("s") for w in re.findall(r"[a-z]{3,}", text.lower())} - FALLBACK_STOP
+
+
+def fallback_items(package: EvidencePackage, limit: int = 4) -> list[EvidenceItem]:
+    """Excerpts most related to the question: main procedure first, then by word overlap, in manual order."""
+    if not package.items:
+        return []
+    q = _qwords(package.request.original_message)
+    main = package.items[0].parent_id
+
+    def score(i: EvidenceItem) -> float:
+        words = _qwords(f"{i.procedure_title} {i.subsection} {i.content}")
+        return len(q & words) + (2 if i.parent_id == main else 0)
+
+    ranked = sorted(package.items, key=score, reverse=True)[:limit]
+    return [i for i in package.items if i in ranked]
+
+
+def focus_table_rows(content: str, question: str, max_lines: int = 14) -> str:
+    """Long spec tables: keep header rows and the rows that mention the question's words."""
+    lines = content.splitlines()
+    if len(lines) <= max_lines or sum(" | " in ln for ln in lines) < len(lines) / 2:
+        return content
+    q = _qwords(question)
+    keep = [
+        ln for ln in lines
+        if " | " not in ln or ln.startswith("#") or re.search(r"\b(Description|Item)\b \|", ln) or q & _qwords(ln)
+    ]  # fmt: skip
+    return "\n".join(keep) if len(keep) < len(lines) else content
 
 
 class GroundedAnswerGenerator:
@@ -63,10 +101,11 @@ class GroundedAnswerGenerator:
             "Follow them in order and check the cited pages."
         ]
         ids = []
-        for item in package.items[:4]:
+        for item in fallback_items(package):
             head = f"**[{item.source_id}] {item.procedure_title or ''} — {item.subsection or 'procedure'}** "
             head += f"(PDF p. {item.page_start}{'-' + str(item.page_end) if item.page_end != item.page_start else ''})"
-            parts.append(f"{head}\n_Applicability: {item.applicability_note}_\n\n{item.content}")
+            body = focus_table_rows(item.content, package.request.original_message)
+            parts.append(f"{head}\n_Applicability: {item.applicability_note}_\n\n{body}")
             ids.append(item.source_id)
         return GeneratedAnswer(text="\n\n".join(parts), cited_source_ids=ids, grounded=True,
                                validation_warnings=["verbatim excerpt fallback"])  # fmt: skip

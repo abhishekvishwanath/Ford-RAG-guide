@@ -71,6 +71,7 @@ class PendingQuestion(BaseModel):
     kind: str  # information | confirmation | safety_ack
     text: str
     options: list[str] = Field(default_factory=list)
+    option_ids: list[str] = Field(default_factory=list)  # procedure parent ids for a variant choice
     asked_turn: int = 0
 
 
@@ -83,6 +84,7 @@ class ActiveProcedure(BaseModel):
     subsection: str | None = None
     chunk_ids: list[str] = Field(default_factory=list)
     figure_ids: list[str] = Field(default_factory=list)
+    vocab: list[str] = Field(default_factory=list)  # words in the procedure text, to recognise follow-ups
     turn: int = 0
 
 
@@ -101,6 +103,7 @@ class SessionState(BaseModel):
     safety_acknowledged: bool = False
     active_hazard: str | None = None
     active_procedure: ActiveProcedure | None = None
+    chosen_variant: ActiveProcedure | None = None  # procedure the user picked when the manual had variants
     recent_evidence: list[dict] = Field(default_factory=list)  # [{turn, chunk_ids, figure_ids}]
     workflow_state: str = "intake"
 

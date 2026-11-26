@@ -34,8 +34,23 @@ def _norm_unit(u: str) -> str:
     return UNIT_NORMAL.get(u, u)
 
 
+RANGE_RE = re.compile(r"(?<![\w.])(\d+(?:\.\d+)?)\s*[-–]\s*(\d+(?:\.\d+)?)\s?(?=[A-Za-z°%Ω])")
+
+
+def _expand_ranges(text: str) -> str:
+    """'1.25 - 1.35 mm' -> '1.25 mm 1.35 mm' so each end of a range is a checkable value."""
+
+    def rep(m: re.Match) -> str:
+        unit = VALUE_RE.match("0 " + text[m.end() : m.end() + 8].lstrip())
+        if not unit:
+            return m.group(0)
+        return f"{m.group(1)} {unit.group(2)} {m.group(2)} "
+
+    return RANGE_RE.sub(rep, text)
+
+
 def _values(text: str) -> set[tuple[str, str]]:
-    return {(float_str(n), _norm_unit(u)) for n, u in VALUE_RE.findall(text)}
+    return {(float_str(n), _norm_unit(u)) for n, u in VALUE_RE.findall(_expand_ranges(text))}
 
 
 def float_str(n: str) -> str:
@@ -105,7 +120,12 @@ WRAP_RE = re.compile(r"(?<=\d)-\s+(?=\d)")  # "1-800-959- 3673": identifier wrap
 
 
 def evidence_text(pkg: EvidencePackage) -> str:
-    return WRAP_RE.sub("-", "\n".join(i.content + "\n" + i.figure_ocr for i in pkg.items).translate(NORMALISE))
+    """Evidence the answer may quote: content, figure callouts and the procedure/section titles."""
+    parts = [
+        "\n".join(filter(None, [i.procedure_title, i.section, i.subsection, i.content, i.figure_ocr]))
+        for i in pkg.items
+    ]
+    return WRAP_RE.sub("-", "\n".join(parts).translate(NORMALISE))
 
 
 def validate(text: str, pkg: EvidencePackage) -> GeneratedAnswer:
@@ -138,7 +158,7 @@ def validate(text: str, pkg: EvidencePackage) -> GeneratedAnswer:
     unsupported = sorted(
         {
             m.group(0).strip()
-            for m in VALUE_RE.finditer(text)
+            for m in VALUE_RE.finditer(_expand_ranges(text))
             if (float_str(m.group(1)), _norm_unit(m.group(2))) not in allowed_values
         }
     )

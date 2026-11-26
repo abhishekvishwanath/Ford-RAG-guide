@@ -109,3 +109,21 @@ def test_wrapped_identifiers_and_vehicle_facts_are_not_false_positives():
     p.items[0].content += "\nFor information call: 1-800-959- 3673."
     a = rv.validate("For your 2014 Mustang 5.0 L: call 1-800-959-3673. Tighten to 25 Nm (18 lb-ft). [S1]", p)
     assert a.grounded and not a.unsupported_values, a.unsupported_values
+
+
+def test_range_endpoints_and_title_identifiers_are_supported():
+    p = pkg()
+    p.items[0].procedure_title = "Spark Plugs — 5.0L (4V)"
+    p.items[0].content += "\nSpark plug gap | 1.25 - 1.35 mm (0.049 - 0.053 in)"
+    a = rv.validate("Gap: 1.25 mm (0.049 in) to 1.35 mm on the 5.0L (4V) [S1]", p)
+    assert a.grounded, a.validation_warnings
+    a = rv.validate("Gap: 1.25-1.40 mm [S1]", p)
+    assert not a.grounded and a.unsupported_values
+
+
+def test_fallback_keeps_relevant_spec_rows():
+    from app.generation.answer_generator import focus_table_rows
+
+    table = "\n".join(["Item | Specification"] + [f"Thing {i} | {i} mm" for i in range(20)] + ["Spark plug gap | 1.25 mm"])
+    out = focus_table_rows(table, "what gap should the spark plugs have?")
+    assert "Spark plug gap" in out and "Thing 7" not in out and out.startswith("Item | Specification")

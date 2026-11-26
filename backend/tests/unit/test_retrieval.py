@@ -140,3 +140,49 @@ def test_variant_ambiguity_detected_when_variant_unknown():
     amb = detect_variant_ambiguity(cands, repo, VehicleFilter(2014, None, None, None))
     assert set(amb) == {"Coolant Pump — 5.0L", "Coolant Pump — 3.7L"}
     assert base_title("Quarter Trim Panel — Convertible") == "quarter trim panel"
+
+
+def test_variant_suffixes_cover_caliper_type_and_side():
+    assert base_title("Brake Pads — 4 Piston") == base_title("Brake Pads — 2 Piston") == "brake pads"
+    assert base_title("Camshaft — LH") == base_title("Camshaft — RH") == "camshaft"
+    assert base_title("Fuel Rail and Fuel Injector — Exploded View") != base_title("Fuel Rail")
+
+
+def test_variant_choice_reply_is_matched_to_option():
+    from app.conversation.context_extractor import match_variant_option
+
+    opts = ["Brake Pads — 2 Piston", "Brake Pads — 4 Piston", "Brake Pads — 6 Piston"]
+    assert match_variant_option("it has the 4 piston brembos", opts) == 1
+    assert match_variant_option("six piston", opts) == 2
+    assert match_variant_option("the second one", opts) == 1
+    assert match_variant_option("not sure", opts) is None
+    assert match_variant_option("driver side", ["Camshaft — LH", "Camshaft — RH"]) == 0
+
+
+def test_chosen_variant_becomes_retrieval_focus_and_task_change_clears_it():
+    from app.conversation.context_extractor import apply_extraction
+    from app.conversation.state import PendingQuestion
+
+    st = SessionState(session_id="s")
+    st.set_slot(Slot(name="component", value="brake pads", status=SlotStatus.USER_PROVIDED, confidence=0.8))
+    st.pending_question = PendingQuestion(
+        slots=["component"], kind="information", text="which?",
+        options=["Brake Pads — 2 Piston", "Brake Pads — 4 Piston"], option_ids=["proc_a", "proc_b"],
+    )  # fmt: skip
+    ev = apply_extraction(st, Extraction(), 2, "4 piston")
+    assert "variant_selected:Brake Pads — 4 Piston" in ev
+    req = build_request(st, "4 piston", Extraction())
+    assert req.focus_parent_id == "proc_b"
+    st.pending_question = None
+    ex = Extraction()
+    ex.updates["component"] = Slot(name="component", value="starter motor", status=SlotStatus.USER_PROVIDED)
+    apply_extraction(st, ex, 3, "now the starter motor")
+    assert st.chosen_variant is None
+
+
+def test_variant_named_in_question_is_not_asked_back():
+    from app.conversation.context_extractor import match_variant_option
+
+    opts = ["Brake Caliper — 2 Piston", "Brake Caliper — 4 Piston", "Brake Caliper — 6 Piston"]
+    assert match_variant_option("Replace a front 4 piston brake caliper", opts, ordinals=False) == 1
+    assert match_variant_option("what is the first step for the caliper", opts, ordinals=False) is None

@@ -217,3 +217,12 @@ Report: `docs/evaluation_report.md`.
   temp files were deleted. The user freed the rest.
 
 **Tests:** backend 110 passing; frontend 13 passing; production build OK.
+
+## Technician stress test — DONE (2026-11-26)
+
+Ten hard live conversations (`scripts/run_technician_scenarios.py`); details, before/after table and
+remaining issues in `docs/evaluation_report.md` §8. 13 defects fixed (variant handling for caliper type/side,
+main-procedure choice, spec-table evidence, safety acknowledgement + LLM hazard echo, trim/engine conflict loop,
+range values in the validator, follow-up vocabulary, look-alike variant questions, focused fallback, Groq daily
+quota fallback model). Retrieval: completeness 0.97, citation page 0.75, figures 0.84 (from 0.92/0.65/0.73);
+Recall/MRR unchanged; gate 1.0 with 0 premature retrievals. Tests: 120 passing.

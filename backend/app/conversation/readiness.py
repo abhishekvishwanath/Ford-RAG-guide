@@ -76,8 +76,20 @@ def variant_requirements(
     reasons: dict[str, str] = {}
     cands = candidate_procedures(state, profile)
     if cands:
+        from app.retrieval.context_expansion import base_title
+
+        best = max(c.score for c in cands)
+        families: dict[str, int] = {}
+        for c in cands:
+            families[base_title(c.title)] = families.get(base_title(c.title), 0) + 1
+
+        def relevant(c: CatalogueMatch) -> bool:
+            # a variant matters when the manual splits this job by it (sibling procedures) or the best
+            # match itself is variant-specific; a weaker look-alike ("Stay Pad" for "pads") does not count
+            return families[base_title(c.title)] > 1 or c.score >= best - 0.05
+
         for slot, attr in VARIANT_DIMS.items():
-            specific = [c for c in cands if getattr(c, attr)]
+            specific = [c for c in cands if getattr(c, attr) and relevant(c)]
             if specific:
                 values = sorted({v for c in specific for v in getattr(c, attr)})
                 titles = "; ".join(dict.fromkeys(c.title for c in specific[:3]))
