@@ -230,6 +230,12 @@ class HybridRetrievalPipeline:
         worse than hybrid retrieval on this manual, while fusing both ranks is best; a task-type
         tie-breaker did not help and was removed. Follow-up focus/step boosts are kept."""
         pool = candidates[: self.cfg.rerank_candidates]
+        if request.dtcs:
+            in_pool = {c.chunk_id for c in pool}
+            pool += [c for c in candidates[len(pool):]
+                     if (ch := self.repo.chunk(c.chunk_id)) is not None and c.chunk_id not in in_pool
+                     and any(d.split(":")[0] in ch.content for d in request.dtcs)][:6]  # fmt: skip
+            candidates = pool + [c for c in candidates if c.chunk_id not in {p.chunk_id for p in pool}]
         if request.focus_parent_id:
             # a chosen/active procedure must be rankable even when the search ranked it low
             in_pool = {c.chunk_id for c in pool}
@@ -262,6 +268,10 @@ class HybridRetrievalPipeline:
                 score += 1.0 / (k + rerank_pos[i] + 1)
             if ch is not None:
                 if request.focus_parent_id and ch.parent_id == request.focus_parent_id:
+                    score += 0.5
+                if request.dtcs and any(d.split(":")[0] in ch.content for d in request.dtcs):
+                    # a DTC is an exact identifier: embeddings and the generic cross-encoder can't rank it,
+                    # so the chunks that actually contain the code come first
                     score += 0.5
                 if (
                     request.focus_steps

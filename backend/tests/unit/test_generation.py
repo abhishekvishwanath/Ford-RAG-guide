@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from app.generation import response_validator as rv
 from app.generation.prompts import build_messages
 from app.schemas.retrieval import EvidenceItem, EvidencePackage, RetrievalRequest
@@ -127,3 +129,18 @@ def test_fallback_keeps_relevant_spec_rows():
     table = "\n".join(["Item | Specification"] + [f"Thing {i} | {i} mm" for i in range(20)] + ["Spark plug gap | 1.25 mm"])
     out = focus_table_rows(table, "what gap should the spark plugs have?")
     assert "Spark plug gap" in out and "Thing 7" not in out and out.startswith("Item | Specification")
+
+
+def test_pinpoint_rows_are_restructured_without_losing_words():
+    from app.retrieval.pinpoint import restructure_pinpoint
+
+    raw = ("C4 CHECK THE COOLANT LEVEL | Yes INSTALL a new thermostat. TEST the system for normal operation. "
+           "No GO to Pinpoint Test A to diagnose a coolant leak.\n"
+           "• NOTE: Allow the engine to cool. • Visually check the level in the degas bottle. "
+           "• Is the engine coolant level within specification? |")  # fmt: skip
+    out = restructure_pinpoint(raw)
+    assert "Question: Is the engine coolant level within specification?" in out
+    assert "→ Yes: INSTALL a new thermostat." in out and "→ No: GO to Pinpoint Test A" in out
+    assert out.index("Visually check") < out.index("Question:") < out.index("→ Yes:")
+    assert set(re.findall(r"[a-z]+", raw.lower())) <= set(re.findall(r"[a-z]+", out.lower()))
+    assert restructure_pinpoint("plain text | no rows") == "plain text | no rows"

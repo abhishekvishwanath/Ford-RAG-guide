@@ -7,11 +7,13 @@ import { MessageBubble } from './components/MessageBubble'
 import { VehiclePanel } from './components/VehiclePanel'
 import { Composer } from './components/Composer'
 
+// one starter per retrieval path: full procedure, spec table, diagram, diagnostic (DTC), variant choice
 const STARTERS = [
-  'I need to replace the water pump on a 2014 Mustang.',
-  '2014 Mustang 5.0L automatic — inspect the front brakes.',
-  'What torque do the front brake caliper bolts need?',
-  'Check engine light with DTC P0128 on my 2014 Mustang.',
+  { kind: 'Procedure + diagrams', text: '2014 Mustang 5.0L — remove and install the coolant pump' },
+  { kind: 'Specification table', text: '2014 Mustang 5.0L — spark plug gap and torque specification' },
+  { kind: 'Diagram lookup', text: '2014 Shelby GT500 5.8L — accessory drive belt routing diagram' },
+  { kind: 'Diagnostic code', text: '2014 Mustang 3.7L — DTC P0128 is set, how do I diagnose it?' },
+  { kind: 'Variant-specific', text: '2014 Mustang 5.0L — replace the front brake pads, 4 piston calipers' },
 ]
 
 export default function App() {
@@ -109,11 +111,14 @@ export default function App() {
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
                   {STARTERS.map((s) => (
                     <button
-                      key={s}
-                      onClick={() => sendMessage(s)}
+                      key={s.text}
+                      onClick={() => sendMessage(s.text)}
                       className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-sm hover:border-sky-400 hover:bg-sky-50"
                     >
-                      {s}
+                      <span className="mb-0.5 block text-[11px] font-semibold uppercase tracking-wide text-sky-700">
+                        {s.kind}
+                      </span>
+                      {s.text}
                     </button>
                   ))}
                 </div>

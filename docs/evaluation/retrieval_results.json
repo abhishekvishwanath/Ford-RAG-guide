@@ -4,14 +4,14 @@
    "recall@5": 0.9583,
    "precision@5": 0.2875,
    "mrr": 0.7882,
-   "ndcg@5": 0.8226,
+   "ndcg@5": 0.8206,
    "applicability_violations@5": 0.0,
    "procedure_completeness": 0.9676,
    "citation_page_correct": 0.75,
    "sufficient": 0.9792,
    "figure_precision": 0.8378,
    "figure_recall": 0.8378,
-   "median_ms": 318,
+   "median_ms": 322,
    "n": 48,
    "figure_precision_n": 37,
    "figure_recall_n": 37
@@ -25,7 +25,7 @@
     "ndcg@5": 0.7328286204777911,
     "applicability_violations@5": 0,
     "top1": "Lower Arm",
-    "ms": 6221,
+    "ms": 6349,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -40,7 +40,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Stabilizer Bar Link",
-    "ms": 315,
+    "ms": 320,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true,
@@ -55,7 +55,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Bearing and Wheel Hub",
-    "ms": 313,
+    "ms": 317,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -70,7 +70,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Strut and Spring Assembly",
-    "ms": 316,
+    "ms": 321,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -85,7 +85,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Shock Absorber",
-    "ms": 321,
+    "ms": 323,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -100,7 +100,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Shock Absorber",
-    "ms": 317,
+    "ms": 322,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true,
@@ -115,7 +115,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Panhard Rod",
-    "ms": 317,
+    "ms": 321,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -130,7 +130,7 @@
     "ndcg@5": 0.6240505200038379,
     "applicability_violations@5": 0,
     "top1": "Ignition Coil-On-Plug",
-    "ms": 318,
+    "ms": 321,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -145,7 +145,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Axle Shaft",
-    "ms": 317,
+    "ms": 327,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -160,7 +160,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Engine",
-    "ms": 325,
+    "ms": 364,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -175,7 +175,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Brake Pads \u2014 2 Piston",
-    "ms": 316,
+    "ms": 356,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": false
@@ -188,7 +188,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Brake Disc Shield",
-    "ms": 318,
+    "ms": 352,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true,
@@ -203,7 +203,7 @@
     "ndcg@5": 0.8503449055347546,
     "applicability_violations@5": 0,
     "top1": "Brake Pads",
-    "ms": 315,
+    "ms": 319,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -218,7 +218,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Parking Brake Cable Tension Release",
-    "ms": 321,
+    "ms": 326,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true,
@@ -233,7 +233,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Speed Sensor \u2014 Front",
-    "ms": 317,
+    "ms": 321,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -248,7 +248,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Anti-Lock Brake System (ABS) Module",
-    "ms": 323,
+    "ms": 326,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -263,7 +263,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Tie Rod \u2014 Inner",
-    "ms": 318,
+    "ms": 321,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -278,7 +278,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Steering Wheel",
-    "ms": 326,
+    "ms": 329,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -293,7 +293,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Coolant Pump \u2014 5.0L",
-    "ms": 323,
+    "ms": 326,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -308,7 +308,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Coolant Pump \u2014 3.7L",
-    "ms": 320,
+    "ms": 324,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -323,7 +323,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Thermostat Housing \u2014 5.0L",
-    "ms": 319,
+    "ms": 332,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true
@@ -336,7 +336,7 @@
     "ndcg@5": 0.8772153153380493,
     "applicability_violations@5": 0,
     "top1": "Radiator",
-    "ms": 314,
+    "ms": 317,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -351,7 +351,7 @@
     "ndcg@5": 0.8772153153380493,
     "applicability_violations@5": 0,
     "top1": "Cooling System Draining, Filling and Bleeding",
-    "ms": 305,
+    "ms": 318,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -366,7 +366,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Accessory Drive Belt Tensioner \u2014 5.0L (4V)",
-    "ms": 325,
+    "ms": 329,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true
@@ -379,7 +379,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Starter Motor \u2014 3.7L",
-    "ms": 317,
+    "ms": 322,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -394,7 +394,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Generator \u2014 5.0L",
-    "ms": 317,
+    "ms": 321,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -409,7 +409,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Spark Plugs",
-    "ms": 317,
+    "ms": 320,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -424,7 +424,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Ignition Coil-On-Plug",
-    "ms": 317,
+    "ms": 320,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -439,7 +439,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Fuel Injectors",
-    "ms": 315,
+    "ms": 320,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true
@@ -452,7 +452,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Throttle Body",
-    "ms": 320,
+    "ms": 324,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -467,7 +467,7 @@
     "ndcg@5": 0.9060254355346823,
     "applicability_violations@5": 0,
     "top1": "Fuel Pump Module",
-    "ms": 319,
+    "ms": 322,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -482,7 +482,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Heated Oxygen Sensor (HO2S)",
-    "ms": 340,
+    "ms": 345,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -497,7 +497,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Mass Air Flow (MAF) Sensor",
-    "ms": 320,
+    "ms": 325,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -512,7 +512,7 @@
     "ndcg@5": 0.5706417189553201,
     "applicability_violations@5": 0,
     "top1": "Clutch",
-    "ms": 343,
+    "ms": 344,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -527,7 +527,7 @@
     "ndcg@5": 0.0,
     "applicability_violations@5": 0,
     "top1": "Clutch Controls",
-    "ms": 1159,
+    "ms": 319,
     "procedure_completeness": 0.0,
     "citation_page_correct": false,
     "sufficient": true
@@ -540,7 +540,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Transmission Draining and Filling",
-    "ms": 339,
+    "ms": 338,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -555,7 +555,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Catalytic Converter \u2014 5.0L",
-    "ms": 322,
+    "ms": 325,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -570,7 +570,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Muffler",
-    "ms": 327,
+    "ms": 329,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true
@@ -583,7 +583,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Clutch and Clutch Field Coil",
-    "ms": 321,
+    "ms": 323,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true,
@@ -598,7 +598,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Blower Motor",
-    "ms": 286,
+    "ms": 287,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -613,7 +613,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Door Trim Panel",
-    "ms": 277,
+    "ms": 273,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -628,7 +628,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Door Latch Release Cable",
-    "ms": 258,
+    "ms": 260,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true,
@@ -643,7 +643,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Quarter Trim Panel \u2014 Convertible",
-    "ms": 325,
+    "ms": 323,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true,
@@ -658,7 +658,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Key Programming Switch State Control",
-    "ms": 299,
+    "ms": 300,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true
@@ -671,7 +671,7 @@
     "ndcg@5": 0.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Bearing and Wheel Hub",
-    "ms": 327,
+    "ms": 322,
     "procedure_completeness": 1.0,
     "citation_page_correct": false,
     "sufficient": true
@@ -681,10 +681,10 @@
     "recall@5": 1.0,
     "precision@5": 0.8,
     "mrr": 1.0,
-    "ndcg@5": 1.0,
+    "ndcg@5": 0.9047172294870751,
     "applicability_violations@5": 0,
     "top1": "Diagnostic Trouble Code (DTC) Charts",
-    "ms": 345,
+    "ms": 342,
     "procedure_completeness": 0.444,
     "citation_page_correct": true,
     "sufficient": true
@@ -697,7 +697,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "SPECIFICATIONS",
-    "ms": 313,
+    "ms": 311,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true
@@ -710,7 +710,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Fuel Tank Draining",
-    "ms": 297,
+    "ms": 296,
     "procedure_completeness": 1.0,
     "citation_page_correct": true,
     "sufficient": true
@@ -756,7 +756,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Bearing and Wheel Hub",
-    "ms": 44
+    "ms": 43
    },
    {
     "id": "R04",
@@ -776,7 +776,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Shock Absorber",
-    "ms": 49
+    "ms": 46
    },
    {
     "id": "R06",
@@ -796,7 +796,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Panhard Rod",
-    "ms": 45
+    "ms": 44
    },
    {
     "id": "R08",
@@ -806,7 +806,7 @@
     "ndcg@5": 0.9197207891481876,
     "applicability_violations@5": 0,
     "top1": "Spring \u2014 Coil",
-    "ms": 45
+    "ms": 44
    },
    {
     "id": "R09",
@@ -816,7 +816,7 @@
     "ndcg@5": 0.8529278650606567,
     "applicability_violations@5": 0,
     "top1": "Axle Shaft",
-    "ms": 43
+    "ms": 41
    },
    {
     "id": "R10",
@@ -826,7 +826,7 @@
     "ndcg@5": 0.0,
     "applicability_violations@5": 0,
     "top1": "Valve Cover \u2014 RH",
-    "ms": 49
+    "ms": 48
    },
    {
     "id": "R11",
@@ -836,7 +836,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Brake Pads \u2014 2 Piston",
-    "ms": 43
+    "ms": 44
    },
    {
     "id": "R12",
@@ -846,7 +846,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Brake Disc",
-    "ms": 46
+    "ms": 47
    },
    {
     "id": "R13",
@@ -856,7 +856,7 @@
     "ndcg@5": 0.8503449055347546,
     "applicability_violations@5": 0,
     "top1": "Brake Pads",
-    "ms": 43
+    "ms": 45
    },
    {
     "id": "R14",
@@ -866,7 +866,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Parking Brake Cable Tension Release",
-    "ms": 44
+    "ms": 45
    },
    {
     "id": "R15",
@@ -876,7 +876,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Speed Sensor \u2014 Front",
-    "ms": 45
+    "ms": 46
    },
    {
     "id": "R16",
@@ -886,7 +886,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Anti-Lock Brake System (ABS) Module",
-    "ms": 49
+    "ms": 50
    },
    {
     "id": "R17",
@@ -896,7 +896,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Tie Rod \u2014 Inner",
-    "ms": 48
+    "ms": 50
    },
    {
     "id": "R18",
@@ -906,7 +906,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Steering Wheel",
-    "ms": 46
+    "ms": 49
    },
    {
     "id": "R19",
@@ -916,7 +916,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Coolant Pump \u2014 5.0L",
-    "ms": 49
+    "ms": 52
    },
    {
     "id": "R20",
@@ -926,7 +926,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Front Cover Radial Seal",
-    "ms": 49
+    "ms": 52
    },
    {
     "id": "R21",
@@ -936,7 +936,7 @@
     "ndcg@5": 0.43067655807339306,
     "applicability_violations@5": 0,
     "top1": "Thermostat Housing \u2014 5.0L",
-    "ms": 48
+    "ms": 52
    },
    {
     "id": "R22",
@@ -946,7 +946,7 @@
     "ndcg@5": 0.8772153153380493,
     "applicability_violations@5": 0,
     "top1": "Radiator",
-    "ms": 43
+    "ms": 44
    },
    {
     "id": "R23",
@@ -956,7 +956,7 @@
     "ndcg@5": 0.5437713091520254,
     "applicability_violations@5": 0,
     "top1": "Heater Core Backflushing",
-    "ms": 49
+    "ms": 48
    },
    {
     "id": "R24",
@@ -966,7 +966,7 @@
     "ndcg@5": 0.43067655807339306,
     "applicability_violations@5": 0,
     "top1": "Accessory Drive Belt Tensioner \u2014 5.0L (4V)",
-    "ms": 53
+    "ms": 51
    },
    {
     "id": "R25",
@@ -996,7 +996,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Spark Plugs",
-    "ms": 52
+    "ms": 46
    },
    {
     "id": "R28",
@@ -1006,7 +1006,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Ignition Coil-On-Plug",
-    "ms": 52
+    "ms": 45
    },
    {
     "id": "R29",
@@ -1036,7 +1036,7 @@
     "ndcg@5": 0.9469024295259745,
     "applicability_violations@5": 0,
     "top1": "Fuel Pump Module",
-    "ms": 82
+    "ms": 46
    },
    {
     "id": "R32",
@@ -1046,7 +1046,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Heated Oxygen Sensor (HO2S)",
-    "ms": 854
+    "ms": 69
    },
    {
     "id": "R33",
@@ -1056,7 +1056,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Mass Air Flow (MAF) Sensor",
-    "ms": 56
+    "ms": 50
    },
    {
     "id": "R34",
@@ -1066,7 +1066,7 @@
     "ndcg@5": 0.5706417189553201,
     "applicability_violations@5": 0,
     "top1": "Clutch",
-    "ms": 73
+    "ms": 69
    },
    {
     "id": "R35",
@@ -1076,7 +1076,7 @@
     "ndcg@5": 0.0,
     "applicability_violations@5": 0,
     "top1": "Clutch Controls",
-    "ms": 67
+    "ms": 64
    },
    {
     "id": "R36",
@@ -1086,7 +1086,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Transmission Draining and Filling",
-    "ms": 64
+    "ms": 63
    },
    {
     "id": "R37",
@@ -1096,7 +1096,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Catalytic Converter \u2014 5.0L",
-    "ms": 47
+    "ms": 52
    },
    {
     "id": "R38",
@@ -1106,7 +1106,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Muffler",
-    "ms": 47
+    "ms": 50
    },
    {
     "id": "R39",
@@ -1116,7 +1116,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Clutch and Clutch Field Coil",
-    "ms": 46
+    "ms": 45
    },
    {
     "id": "R40",
@@ -1126,7 +1126,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Blower Motor",
-    "ms": 57
+    "ms": 48
    },
    {
     "id": "R41",
@@ -1136,7 +1136,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Door Trim Panel",
-    "ms": 27
+    "ms": 22
    },
    {
     "id": "R42",
@@ -1146,7 +1146,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Door Latch Release Cable",
-    "ms": 21
+    "ms": 23
    },
    {
     "id": "R43",
@@ -1166,7 +1166,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Key Programming Switch State Control",
-    "ms": 18
+    "ms": 23
    },
    {
     "id": "R45",
@@ -1176,7 +1176,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Wheel Bearing and Wheel Hub",
-    "ms": 45
+    "ms": 47
    },
    {
     "id": "R46",
@@ -1186,7 +1186,7 @@
     "ndcg@5": 0.9558295932317544,
     "applicability_violations@5": 0,
     "top1": "Diagnostic Trouble Code (DTC) Charts",
-    "ms": 65
+    "ms": 64
    },
    {
     "id": "R47",
@@ -1196,7 +1196,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "SPECIFICATIONS",
-    "ms": 45
+    "ms": 46
    },
    {
     "id": "R48",
@@ -1217,7 +1217,7 @@
    "mrr": 0.7594,
    "ndcg@5": 0.8034,
    "applicability_violations@5": 0.0,
-   "median_ms": 44,
+   "median_ms": 45,
    "n": 48
   },
   "cases": [
@@ -1229,7 +1229,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Strut and Spring Assembly",
-    "ms": 59
+    "ms": 63
    },
    {
     "id": "R02",
@@ -1239,7 +1239,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Stabilizer Bar Link",
-    "ms": 46
+    "ms": 47
    },
    {
     "id": "R03",
@@ -1249,7 +1249,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Bearing and Wheel Hub",
-    "ms": 40
+    "ms": 41
    },
    {
     "id": "R04",
@@ -1259,7 +1259,7 @@
     "ndcg@5": 0.9469024295259745,
     "applicability_violations@5": 0,
     "top1": "Strut and Spring Assembly",
-    "ms": 46
+    "ms": 45
    },
    {
     "id": "R05",
@@ -1279,7 +1279,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Shock Absorber \u2014 GT500",
-    "ms": 44
+    "ms": 46
    },
    {
     "id": "R07",
@@ -1289,7 +1289,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Panhard Rod",
-    "ms": 45
+    "ms": 46
    },
    {
     "id": "R08",
@@ -1339,7 +1339,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Brake Disc",
-    "ms": 46
+    "ms": 47
    },
    {
     "id": "R13",
@@ -1349,7 +1349,7 @@
     "ndcg@5": 0.43067655807339306,
     "applicability_violations@5": 0,
     "top1": "Brake Pads \u2014 2 Piston",
-    "ms": 41
+    "ms": 40
    },
    {
     "id": "R14",
@@ -1369,7 +1369,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Speed Sensor \u2014 Front",
-    "ms": 42
+    "ms": 41
    },
    {
     "id": "R16",
@@ -1379,7 +1379,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Anti-Lock Brake System (ABS) Module",
-    "ms": 49
+    "ms": 47
    },
    {
     "id": "R17",
@@ -1389,7 +1389,7 @@
     "ndcg@5": 0.9060254355346823,
     "applicability_violations@5": 0,
     "top1": "Tie Rod \u2014 Inner",
-    "ms": 44
+    "ms": 45
    },
    {
     "id": "R18",
@@ -1449,7 +1449,7 @@
     "ndcg@5": 0.6934264036172708,
     "applicability_violations@5": 0,
     "top1": "Radiator",
-    "ms": 41
+    "ms": 40
    },
    {
     "id": "R24",
@@ -1459,7 +1459,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Accessory Drive Belt Tensioner \u2014 5.0L (4V)",
-    "ms": 46
+    "ms": 47
    },
    {
     "id": "R25",
@@ -1479,7 +1479,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Generator \u2014 5.0L",
-    "ms": 43
+    "ms": 42
    },
    {
     "id": "R27",
@@ -1489,7 +1489,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Spark Plugs",
-    "ms": 42
+    "ms": 43
    },
    {
     "id": "R28",
@@ -1519,7 +1519,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Throttle Body",
-    "ms": 47
+    "ms": 45
    },
    {
     "id": "R31",
@@ -1589,7 +1589,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Catalytic Converter \u2014 5.0L",
-    "ms": 46
+    "ms": 47
    },
    {
     "id": "R38",
@@ -1599,7 +1599,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Muffler",
-    "ms": 46
+    "ms": 47
    },
    {
     "id": "R39",
@@ -1609,7 +1609,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Air Conditioning (A/C) Compressor \u2014 5.0L and 5.8L",
-    "ms": 40
+    "ms": 41
    },
    {
     "id": "R40",
@@ -1649,7 +1649,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Quarter Trim Panel \u2014 Convertible",
-    "ms": 42
+    "ms": 45
    },
    {
     "id": "R44",
@@ -1679,7 +1679,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Diagnostic Trouble Code (DTC) Charts",
-    "ms": 58
+    "ms": 59
    },
    {
     "id": "R47",
@@ -1812,7 +1812,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Differential Housing Cover",
-    "ms": 4
+    "ms": 3
    },
    {
     "id": "R11",
@@ -1872,7 +1872,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Anti-Lock Brake System (ABS) Module",
-    "ms": 2
+    "ms": 3
    },
    {
     "id": "R17",
@@ -1882,7 +1882,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Tie Rod \u2014 Inner",
-    "ms": 3
+    "ms": 4
    },
    {
     "id": "R18",
@@ -2012,7 +2012,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Throttle Body",
-    "ms": 3
+    "ms": 2
    },
    {
     "id": "R31",
@@ -2072,7 +2072,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Manual Transmission",
-    "ms": 4
+    "ms": 3
    },
    {
     "id": "R37",
@@ -2192,7 +2192,7 @@
     "ndcg@5": 0.0,
     "applicability_violations@5": 0,
     "top1": "Supercharger Cooling System Draining, Filling and Bleeding",
-    "ms": 2
+    "ms": 3
    }
   ]
  },
@@ -2201,9 +2201,9 @@
    "recall@5": 0.9375,
    "precision@5": 0.2792,
    "mrr": 0.7012,
-   "ndcg@5": 0.7545,
+   "ndcg@5": 0.7525,
    "applicability_violations@5": 1.0208,
-   "median_ms": 296,
+   "median_ms": 300,
    "n": 48
   },
   "cases": [
@@ -2215,7 +2215,7 @@
     "ndcg@5": 0.7328286204777911,
     "applicability_violations@5": 0,
     "top1": "Lower Arm",
-    "ms": 309
+    "ms": 316
    },
    {
     "id": "R02",
@@ -2225,7 +2225,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Stabilizer Bar Link",
-    "ms": 294
+    "ms": 295
    },
    {
     "id": "R03",
@@ -2235,7 +2235,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Bearing and Wheel Hub",
-    "ms": 292
+    "ms": 294
    },
    {
     "id": "R04",
@@ -2255,7 +2255,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 1,
     "top1": "Shock Absorber",
-    "ms": 296
+    "ms": 297
    },
    {
     "id": "R06",
@@ -2265,7 +2265,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Shock Absorber",
-    "ms": 301
+    "ms": 299
    },
    {
     "id": "R07",
@@ -2275,7 +2275,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 1,
     "top1": "Panhard Rod",
-    "ms": 294
+    "ms": 296
    },
    {
     "id": "R08",
@@ -2285,7 +2285,7 @@
     "ndcg@5": 0.5437713091520254,
     "applicability_violations@5": 2,
     "top1": "Ignition Coil-On-Plug",
-    "ms": 292
+    "ms": 295
    },
    {
     "id": "R09",
@@ -2295,7 +2295,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Axle Shaft",
-    "ms": 292
+    "ms": 295
    },
    {
     "id": "R10",
@@ -2305,7 +2305,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 1,
     "top1": "Valve Cover \u2014 RH",
-    "ms": 298
+    "ms": 304
    },
    {
     "id": "R11",
@@ -2315,7 +2315,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Brake Pads \u2014 2 Piston",
-    "ms": 292
+    "ms": 306
    },
    {
     "id": "R12",
@@ -2325,7 +2325,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Brake Disc Shield",
-    "ms": 296
+    "ms": 339
    },
    {
     "id": "R13",
@@ -2335,7 +2335,7 @@
     "ndcg@5": 0.8503449055347546,
     "applicability_violations@5": 0,
     "top1": "Brake Pads",
-    "ms": 296
+    "ms": 333
    },
    {
     "id": "R14",
@@ -2345,7 +2345,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Parking Brake Cable Tension Release",
-    "ms": 285
+    "ms": 321
    },
    {
     "id": "R15",
@@ -2355,7 +2355,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Speed Sensor \u2014 Front",
-    "ms": 294
+    "ms": 335
    },
    {
     "id": "R16",
@@ -2365,7 +2365,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Anti-Lock Brake System (ABS) Module",
-    "ms": 298
+    "ms": 321
    },
    {
     "id": "R17",
@@ -2375,7 +2375,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Tie Rod \u2014 Inner",
-    "ms": 297
+    "ms": 301
    },
    {
     "id": "R18",
@@ -2385,7 +2385,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Steering Wheel",
-    "ms": 296
+    "ms": 299
    },
    {
     "id": "R19",
@@ -2395,7 +2395,7 @@
     "ndcg@5": 0.9469024295259745,
     "applicability_violations@5": 2,
     "top1": "Coolant Pump \u2014 5.0L",
-    "ms": 299
+    "ms": 301
    },
    {
     "id": "R20",
@@ -2405,7 +2405,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 3,
     "top1": "Coolant Pump \u2014 5.0L",
-    "ms": 298
+    "ms": 303
    },
    {
     "id": "R21",
@@ -2415,7 +2415,7 @@
     "ndcg@5": 0.0,
     "applicability_violations@5": 4,
     "top1": "Thermostat Housing \u2014 5.8L (4V)",
-    "ms": 297
+    "ms": 300
    },
    {
     "id": "R22",
@@ -2425,7 +2425,7 @@
     "ndcg@5": 0.8772153153380493,
     "applicability_violations@5": 1,
     "top1": "Radiator",
-    "ms": 291
+    "ms": 295
    },
    {
     "id": "R23",
@@ -2435,7 +2435,7 @@
     "ndcg@5": 0.6240505200038379,
     "applicability_violations@5": 1,
     "top1": "Supercharger Cooling System Draining, Filling and Bleeding",
-    "ms": 296
+    "ms": 299
    },
    {
     "id": "R24",
@@ -2445,7 +2445,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 3,
     "top1": "Accessory Drive Belt \u2014 3.7L",
-    "ms": 298
+    "ms": 300
    },
    {
     "id": "R25",
@@ -2455,7 +2455,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 2,
     "top1": "Starter Motor \u2014 3.7L",
-    "ms": 293
+    "ms": 298
    },
    {
     "id": "R26",
@@ -2465,7 +2465,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 3,
     "top1": "Generator \u2014 5.0L",
-    "ms": 293
+    "ms": 297
    },
    {
     "id": "R27",
@@ -2475,7 +2475,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 2,
     "top1": "Spark Plugs",
-    "ms": 294
+    "ms": 298
    },
    {
     "id": "R28",
@@ -2485,7 +2485,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 2,
     "top1": "Ignition Coil-On-Plug",
-    "ms": 294
+    "ms": 296
    },
    {
     "id": "R29",
@@ -2495,7 +2495,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 2,
     "top1": "Fuel Injectors",
-    "ms": 292
+    "ms": 295
    },
    {
     "id": "R30",
@@ -2505,7 +2505,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 3,
     "top1": "Throttle Body",
-    "ms": 277
+    "ms": 280
    },
    {
     "id": "R31",
@@ -2515,7 +2515,7 @@
     "ndcg@5": 0.7328286204777911,
     "applicability_violations@5": 0,
     "top1": "Fuel Level Sender",
-    "ms": 296
+    "ms": 300
    },
    {
     "id": "R32",
@@ -2525,7 +2525,7 @@
     "ndcg@5": 0.43067655807339306,
     "applicability_violations@5": 3,
     "top1": "Engine Control Components \u2014 Exploded View, 3.7L",
-    "ms": 300
+    "ms": 302
    },
    {
     "id": "R33",
@@ -2535,7 +2535,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 2,
     "top1": "Mass Air Flow (MAF) Sensor",
-    "ms": 295
+    "ms": 297
    },
    {
     "id": "R34",
@@ -2555,7 +2555,7 @@
     "ndcg@5": 0.0,
     "applicability_violations@5": 2,
     "top1": "Clutch Controls",
-    "ms": 276
+    "ms": 280
    },
    {
     "id": "R36",
@@ -2565,7 +2565,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 3,
     "top1": "Transmission Draining and Filling",
-    "ms": 295
+    "ms": 298
    },
    {
     "id": "R37",
@@ -2575,7 +2575,7 @@
     "ndcg@5": 0.9828920819566879,
     "applicability_violations@5": 1,
     "top1": "Catalytic Converter \u2014 5.0L",
-    "ms": 299
+    "ms": 302
    },
    {
     "id": "R38",
@@ -2585,7 +2585,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Muffler",
-    "ms": 297
+    "ms": 300
    },
    {
     "id": "R39",
@@ -2595,7 +2595,7 @@
     "ndcg@5": 0.43067655807339306,
     "applicability_violations@5": 2,
     "top1": "Air Conditioning (A/C) Compressor \u2014 3.7L",
-    "ms": 287
+    "ms": 296
    },
    {
     "id": "R40",
@@ -2605,7 +2605,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Blower Motor",
-    "ms": 256
+    "ms": 291
    },
    {
     "id": "R41",
@@ -2615,7 +2615,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "Door Trim Panel",
-    "ms": 277
+    "ms": 309
    },
    {
     "id": "R42",
@@ -2625,7 +2625,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Door Latch Release Cable",
-    "ms": 258
+    "ms": 293
    },
    {
     "id": "R43",
@@ -2635,7 +2635,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 1,
     "top1": "Quarter Trim Panel \u2014 Convertible",
-    "ms": 299
+    "ms": 333
    },
    {
     "id": "R44",
@@ -2645,7 +2645,7 @@
     "ndcg@5": 0.6309297535714575,
     "applicability_violations@5": 0,
     "top1": "Key Programming Switch State Control",
-    "ms": 296
+    "ms": 336
    },
    {
     "id": "R45",
@@ -2655,17 +2655,17 @@
     "ndcg@5": 0.0,
     "applicability_violations@5": 0,
     "top1": "Wheel Bearing and Wheel Hub",
-    "ms": 296
+    "ms": 336
    },
    {
     "id": "R46",
     "recall@5": 1.0,
     "precision@5": 0.8,
     "mrr": 1.0,
-    "ndcg@5": 1.0,
+    "ndcg@5": 0.9047172294870751,
     "applicability_violations@5": 0,
     "top1": "Diagnostic Trouble Code (DTC) Charts",
-    "ms": 296
+    "ms": 331
    },
    {
     "id": "R47",
@@ -2675,7 +2675,7 @@
     "ndcg@5": 1.0,
     "applicability_violations@5": 0,
     "top1": "SPECIFICATIONS",
-    "ms": 283
+    "ms": 326
    },
    {
     "id": "R48",
@@ -2685,7 +2685,7 @@
     "ndcg@5": 0.5,
     "applicability_violations@5": 0,
     "top1": "Fuel Tank Draining",
-    "ms": 294
+    "ms": 334
    }
   ]
  }

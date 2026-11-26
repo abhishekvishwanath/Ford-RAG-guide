@@ -182,3 +182,26 @@ lookup and a contradictory engine. Answers were graded against facts pulled from
   applicable to a 4-piston caliper; the 4/6-piston caliper bolt is also 115 Nm. Values are checked, wording is not.
 - Retrieval benchmark after the fixes: Recall@5 / MRR unchanged (0.958 / 0.788). Completeness 0.92 → 0.97,
   citation page 0.65 → 0.75, figure P/R 0.73 → 0.84. Gate benchmark unchanged (1.0, 0 premature retrievals).
+
+### 8.1 Default searches (UI starters)
+
+The welcome screen has five starters, one per retrieval path, each run live:
+
+| Starter | Path | Result |
+|---|---|---|
+| 5.0L coolant pump R&I | full procedure + diagrams | ✅ Coolant Pump — 5.0L, cited steps |
+| 5.0L spark plug gap + torque | specification table | ✅ 1.25–1.35 mm; 14 Nm (124 lb-in) |
+| GT500 5.8L belt routing diagram | diagram lookup | ✅ routing figure from 303-05 Description and Operation |
+| 3.7L DTC P0128 | diagnostic code | ❌ → ✅ see below |
+| 5.0L front pads, 4-piston | variant named in question | ✅ Brake Pads — 4 Piston directly, no question back |
+
+**DTC retrieval bug:** BM25 ranked the P0128 chunks 1–4, but dense retrieval and the generic cross-encoder
+ranked an infotainment "pinpoint test" page first. Chunks containing a DTC named in the request now get a
+decisive rerank boost and a main-procedure bonus.
+
+**Inverted diagnostic branch:** with the right evidence, the model then swapped a Yes/No outcome:
+"coolant level within specification? Yes → new thermostat" became "below specification → new thermostat".
+The validator cannot catch this, because every value matched. Pinpoint rows extract with the outcomes *before*
+the question. They are now restructured at evidence time (`retrieval/pinpoint.py`; 536 of 803 rows): step →
+checks → question → "→ Yes:" / "→ No:", with no words changed. A prompt rule also forbids rewording a branch.
+The rerun gives every branch correctly.

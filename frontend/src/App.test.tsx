@@ -30,7 +30,9 @@ it('renders the product and starter prompts', async () => {
   render(<App />)
   expect(screen.getByRole('heading', { name: 'Mustang Workshop Assistant' })).toBeInTheDocument()
   expect(await screen.findByText(/Answers only from the 2014 workshop manual/)).toBeInTheDocument()
-  expect(screen.getAllByRole('button', { name: /2014 Mustang/ }).length).toBeGreaterThan(0)
+  expect(screen.getAllByRole('button', { name: /2014 (Mustang|Shelby)/ })).toHaveLength(5)
+  for (const kind of ['Procedure + diagrams', 'Specification table', 'Diagram lookup', 'Diagnostic code', 'Variant-specific'])
+    expect(screen.getByText(kind)).toBeInTheDocument()
 })
 
 it('runs a clarification turn then an answer, keeping the session id', async () => {

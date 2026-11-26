@@ -14,6 +14,7 @@ import re
 from dataclasses import dataclass
 
 from app.retrieval.applicability_filter import VehicleFilter
+from app.retrieval.pinpoint import restructure_pinpoint
 from app.schemas.chunk import Chunk
 from app.schemas.retrieval import Candidate, EvidenceItem, RetrievalRequest
 from app.services.manual_repository import ManualRepository
@@ -75,6 +76,8 @@ def choose_main_parent(req: RetrievalRequest, hits: list[Chunk]) -> str:
             continue
         seen.add(h.parent_id)
         scores[h.parent_id] += fit.get(h.doc_type or "", 0.0)
+        if req.dtcs and any(d.split(":")[0] in c.content for c in hits if c.parent_id == h.parent_id for d in req.dtcs):
+            scores[h.parent_id] += 0.6  # the procedure that actually lists the DTC
         # each title word the technician used counts: "Clutch Disc and Pressure Plate" beats "Clutch"
         tw = _title_words(base_title(h.procedure_title) if h.procedure_title else None)
         scores[h.parent_id] += 0.15 * len(tw & asked)
@@ -258,7 +261,7 @@ def expand(
                 printed_page_start=c.printed_page_start,
                 printed_page_end=c.printed_page_end,
                 applicability_note=flt.note(c),
-                content=c.content,
+                content=restructure_pinpoint(c.content),
                 figure_ocr=c.figure_ocr,
                 figure_ids=c.figure_ids,
                 table_ids=c.table_ids,

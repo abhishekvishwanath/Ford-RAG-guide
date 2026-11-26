@@ -186,3 +186,18 @@ def test_variant_named_in_question_is_not_asked_back():
     opts = ["Brake Caliper — 2 Piston", "Brake Caliper — 4 Piston", "Brake Caliper — 6 Piston"]
     assert match_variant_option("Replace a front 4 piston brake caliper", opts, ordinals=False) == 1
     assert match_variant_option("what is the first step for the caliper", opts, ordinals=False) is None
+
+
+def test_dtc_chunk_outranks_generic_diagnostics():
+    chunks = [
+        make_chunk("gen", "Pinpoint test: verify the customer's concern, using a diagnostic scan tool clear all DTCs, "
+                   "how to diagnose the symptom", title="Information and Entertainment System", parent="proc_G"),
+        make_chunk("cool", "DTC P0128 coolant temperature below thermostat regulating temperature",
+                   title="Engine Cooling", parent="proc_C"),
+    ]  # fmt: skip
+    repo = ManualRepository(chunks, [], [])
+    pipe = HybridRetrievalPipeline(RetrievalConfig(top_k=2), repo, None, BM25Index.from_chunks(chunks), NoopReranker())
+    req = RetrievalRequest(query_text="diagnose", keyword_query="diagnose", original_message="how do I diagnose it",
+                           model_year=2014, dtcs=["P0128"], task_type="diagnose")  # fmt: skip
+    ranked = pipe.rerank(req, [Candidate(chunk_id="gen", rrf_score=0.5), Candidate(chunk_id="cool", rrf_score=0.1)])
+    assert ranked[0].chunk_id == "cool"
